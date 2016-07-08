@@ -36,7 +36,7 @@ summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, verbose 
 }
 
 
-#' Summarize Full dataset
+#' Summarize full dataset
 #'
 #' Create a full object that summarizes both subject level and time varying variables.
 #'
