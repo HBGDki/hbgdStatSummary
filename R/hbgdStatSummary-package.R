@@ -4,9 +4,11 @@ if (getRversion() >= "2.15.1") {
   )))
 }
 
-#' @import  hbgd dplyr tidyr
+#' @import hbgd dplyr
 #' @importFrom graphics hist
 #' @importFrom stats qt sd
 #' @importFrom utils data
-#' @importFrom magrittr %>% extract2 set_names set_colnames
+#' @importFrom tidyr nest unnest
+#' @importFrom magrittr extract2 set_names set_colnames
+#' @importFrom utils setTxtProgressBar txtProgressBar
 NULL
