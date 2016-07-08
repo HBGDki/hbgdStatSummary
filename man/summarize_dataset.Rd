@@ -3,7 +3,7 @@
 \name{summarize_dataset}
 \alias{summarize_dataset}
 \alias{summarize_dataset_json}
-\title{Summarize Full dataset}
+\title{Summarize full dataset}
 \usage{
 summarize_dataset(dt, check = TRUE, group_duration = "week",
   verbose = TRUE)
