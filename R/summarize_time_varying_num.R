@@ -48,9 +48,9 @@ summarize_time_varying_num <- function(
     ) %>%
     purrr::map(
       ~ as.list(transform(.,
-        ci_lower = ifelse(is.na(mean), NA,
+        ci_lower = ifelse(is.na(mean) || n <= 1, NA,
           sd * qt(0.025, df = n - 1) / sqrt(n) + mean),
-        ci_upper = ifelse(is.na(mean), NA,
+        ci_upper = ifelse(is.na(mean) || n <= 1, NA,
           sd * qt(0.975, df = n - 1) / sqrt(n) + mean)
       ))
     ) %>%
