@@ -1,0 +1,10 @@
+cache_directory: ".lintr_cache"
+linters: with_defaults(
+    commented_code_linter = NULL, # 25
+    line_length_linter(100),
+    NULL
+  )
+exclusions:
+  list(
+    "tests/testthat.R"
+  )
