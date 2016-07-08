@@ -90,3 +90,19 @@ summarize_dataset_json <- function(..., pretty = TRUE) {
   summarize_dataset(...) %>%
     jsonlite::toJSON(pretty = pretty, na = "null")
 }
+
+
+#' Summarize full dataset and save to file
+#'
+#' Create a full object that summarizes both subject level and time varying variables, then saves the json results to a file
+#'
+#' @param file file to save to
+#' @param ... args passed directly to \code{summarize_dataset_json}
+#' @export
+summarize_dataset_file <- function(file, ...) {
+  ret <- summarize_dataset_json(...)
+  cat(ret, file = file)
+  cat("\n", file = file, append = TRUE)
+
+  ret
+}
