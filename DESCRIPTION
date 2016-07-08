@@ -6,8 +6,6 @@ Description: Makes summaries of large user over time datasets.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends:
-    R (>= 3.3.1)
 Imports:
     hbgd,
     dplyr,
