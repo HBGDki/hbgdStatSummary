@@ -1,0 +1,7 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+man-roxygen
+\.git
+\.DS_Store
+.lintr_cache
+general_structure.txt
