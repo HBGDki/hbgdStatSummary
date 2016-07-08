@@ -3,5 +3,5 @@
 man-roxygen
 \.git
 \.DS_Store
-.lintr_cache
+.lintr
 general_structure.txt
