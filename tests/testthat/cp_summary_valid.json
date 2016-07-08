@@ -1,0 +1,957 @@
+{
+  "wtkg": {
+    "col_name": ["wtkg"],
+    "type": ["time-varying-num"],
+    "group_duration": ["week"],
+    "time_bins": {
+      "1": {
+        "M1": [3.4076],
+        "M2": [121.0645],
+        "n": [500],
+        "na_count": [0],
+        "mean": [3.4076],
+        "sd": [0.4926],
+        "ci_lower": [3.3644],
+        "ci_upper": [3.4509]
+      },
+      "18": {
+        "M1": [6.6768],
+        "M2": [363.0968],
+        "n": [460],
+        "na_count": [0],
+        "mean": [6.6768],
+        "sd": [0.8894],
+        "ci_lower": [6.5953],
+        "ci_upper": [6.7583]
+      },
+      "53": {
+        "M1": [10.1565],
+        "M2": [634.1717],
+        "n": [428],
+        "na_count": [0],
+        "mean": [10.1565],
+        "sd": [1.2187],
+        "ci_lower": [10.0408],
+        "ci_upper": [10.2723]
+      }
+    }
+  },
+  "htcm": {
+    "col_name": ["htcm"],
+    "type": ["time-varying-num"],
+    "group_duration": ["week"],
+    "time_bins": {
+      "1": {
+        "M1": [50.8441],
+        "M2": [3506.998],
+        "n": [494],
+        "na_count": [6],
+        "mean": [50.8441],
+        "sd": [2.6671],
+        "ci_lower": [50.6084],
+        "ci_upper": [51.0799]
+      },
+      "18": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [460],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      },
+      "53": {
+        "M1": [75.4541],
+        "M2": [4013.3553],
+        "n": [425],
+        "na_count": [3],
+        "mean": [75.4541],
+        "sd": [3.0766],
+        "ci_lower": [75.1608],
+        "ci_upper": [75.7475]
+      }
+    }
+  },
+  "lencm": {
+    "col_name": ["lencm"],
+    "type": ["time-varying-num"],
+    "group_duration": ["week"],
+    "time_bins": {
+      "1": {
+        "M1": [50.8441],
+        "M2": [3506.998],
+        "n": [494],
+        "na_count": [6],
+        "mean": [50.8441],
+        "sd": [2.6671],
+        "ci_lower": [50.6084],
+        "ci_upper": [51.0799]
+      },
+      "18": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [460],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      },
+      "53": {
+        "M1": [75.4541],
+        "M2": [4013.3553],
+        "n": [425],
+        "na_count": [3],
+        "mean": [75.4541],
+        "sd": [3.0766],
+        "ci_lower": [75.1608],
+        "ci_upper": [75.7475]
+      }
+    }
+  },
+  "bmi": {
+    "col_name": ["bmi"],
+    "type": ["time-varying-num"],
+    "group_duration": ["week"],
+    "time_bins": {
+      "1": {
+        "M1": [13.1653],
+        "M2": [1511.3569],
+        "n": [494],
+        "na_count": [6],
+        "mean": [13.1653],
+        "sd": [1.7509],
+        "ci_lower": [13.0106],
+        "ci_upper": [13.3201]
+      },
+      "18": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [460],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      },
+      "53": {
+        "M1": [17.7869],
+        "M2": [1114.4299],
+        "n": [425],
+        "na_count": [3],
+        "mean": [17.7869],
+        "sd": [1.6212],
+        "ci_lower": [17.6324],
+        "ci_upper": [17.9415]
+      }
+    }
+  },
+  "waz": {
+    "col_name": ["waz"],
+    "type": ["time-varying-num"],
+    "group_duration": ["week"],
+    "time_bins": {
+      "1": {
+        "M1": [0.2618],
+        "M2": [502.5209],
+        "n": [500],
+        "na_count": [0],
+        "mean": [0.2618],
+        "sd": [1.0035],
+        "ci_lower": [0.1737],
+        "ci_upper": [0.35]
+      },
+      "18": {
+        "M1": [-0.1435],
+        "M2": [531.947],
+        "n": [460],
+        "na_count": [0],
+        "mean": [-0.1435],
+        "sd": [1.0765],
+        "ci_lower": [-0.2421],
+        "ci_upper": [-0.0448]
+      },
+      "53": {
+        "M1": [0.6889],
+        "M2": [418.7725],
+        "n": [428],
+        "na_count": [0],
+        "mean": [0.6889],
+        "sd": [0.9903],
+        "ci_lower": [0.5948],
+        "ci_upper": [0.7829]
+      }
+    }
+  },
+  "haz": {
+    "col_name": ["haz"],
+    "type": ["time-varying-num"],
+    "group_duration": ["week"],
+    "time_bins": {
+      "1": {
+        "M1": [0.6133],
+        "M2": [959.8159],
+        "n": [494],
+        "na_count": [6],
+        "mean": [0.6133],
+        "sd": [1.3953],
+        "ci_lower": [0.4899],
+        "ci_upper": [0.7366]
+      },
+      "18": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [460],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      },
+      "53": {
+        "M1": [0.2104],
+        "M2": [599.3492],
+        "n": [425],
+        "na_count": [3],
+        "mean": [0.2104],
+        "sd": [1.1889],
+        "ci_lower": [0.097],
+        "ci_upper": [0.3238]
+      }
+    }
+  },
+  "whz": {
+    "col_name": ["whz"],
+    "type": ["time-varying-num"],
+    "group_duration": ["week"],
+    "time_bins": {
+      "1": {
+        "M1": [-0.5638],
+        "M2": [787.9503],
+        "n": [488],
+        "na_count": [12],
+        "mean": [-0.5638],
+        "sd": [1.272],
+        "ci_lower": [-0.6769],
+        "ci_upper": [-0.4507]
+      },
+      "18": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [460],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      },
+      "53": {
+        "M1": [0.7912],
+        "M2": [432.0078],
+        "n": [425],
+        "na_count": [3],
+        "mean": [0.7912],
+        "sd": [1.0094],
+        "ci_lower": [0.695],
+        "ci_upper": [0.8875]
+      }
+    }
+  },
+  "baz": {
+    "col_name": ["baz"],
+    "type": ["time-varying-num"],
+    "group_duration": ["week"],
+    "time_bins": {
+      "1": {
+        "M1": [-0.2227],
+        "M2": [862.8446],
+        "n": [494],
+        "na_count": [6],
+        "mean": [-0.2227],
+        "sd": [1.3229],
+        "ci_lower": [-0.3397],
+        "ci_upper": [-0.1058]
+      },
+      "18": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [460],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      },
+      "53": {
+        "M1": [0.7634],
+        "M2": [457.7864],
+        "n": [425],
+        "na_count": [3],
+        "mean": [0.7634],
+        "sd": [1.0391],
+        "ci_lower": [0.6644],
+        "ci_upper": [0.8625]
+      }
+    }
+  },
+  "siteid": {
+    "col_name": ["siteid"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "5",
+        "count": 500
+      }
+    ]
+  },
+  "sexn": {
+    "col_name": ["sexn"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "1",
+        "count": 252
+      },
+      {
+        "key": "2",
+        "count": 248
+      }
+    ]
+  },
+  "sex": {
+    "col_name": ["sex"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "Female",
+        "count": 248
+      },
+      {
+        "key": "Male",
+        "count": 252
+      }
+    ]
+  },
+  "feedingn": {
+    "col_name": ["feedingn"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "1",
+        "count": 25
+      },
+      {
+        "key": "2",
+        "count": 153
+      },
+      {
+        "key": "3",
+        "count": 4
+      },
+      {
+        "key": "90",
+        "count": 318
+      }
+    ]
+  },
+  "feeding": {
+    "col_name": ["feeding"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "Exclusively breast fed",
+        "count": 25
+      },
+      {
+        "key": "Exclusively formula fed",
+        "count": 153
+      },
+      {
+        "key": "Mixture breast/formula fed",
+        "count": 4
+      },
+      {
+        "key": "Unknown",
+        "count": 318
+      }
+    ]
+  },
+  "gagebrth": {
+    "col_name": ["gagebrth"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "259",
+        "count": 18
+      },
+      {
+        "key": "266",
+        "count": 57
+      },
+      {
+        "key": "273",
+        "count": 118
+      },
+      {
+        "key": "280",
+        "count": 148
+      },
+      {
+        "key": "287",
+        "count": 111
+      },
+      {
+        "key": "294",
+        "count": 31
+      },
+      {
+        "key": "301",
+        "count": 17
+      }
+    ]
+  },
+  "birthwt": {
+    "breaks": [1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500],
+    "counts": [1, 16, 73, 201, 158, 40, 10, 1],
+    "density": [4e-06, 0.0001, 0.0003, 0.0008, 0.0006, 0.0002, 0, 4e-06],
+    "mids": [1750, 2250, 2750, 3250, 3750, 4250, 4750, 5250],
+    "col_name": ["birthwt"],
+    "mean": [3407.64],
+    "sd": [492.5588],
+    "na_count": [0],
+    "ci_lower": [3364.3611],
+    "ci_upper": [3450.9189],
+    "type": ["subject-level-num"]
+  },
+  "birthlen": {
+    "breaks": [30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60],
+    "counts": [1, 0, 1, 0, 0, 1, 3, 12, 53, 145, 157, 84, 32, 4, 1],
+    "density": [0.001, 0, 0.001, 0, 0, 0.001, 0.003, 0.0121, 0.0536, 0.1468, 0.1589, 0.085, 0.0324, 0.004, 0.001],
+    "mids": [31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59],
+    "col_name": ["birthlen"],
+    "mean": [50.8441],
+    "sd": [2.6671],
+    "na_count": [6],
+    "ci_lower": [50.6084],
+    "ci_upper": [51.0799],
+    "type": ["subject-level-num"]
+  },
+  "apgar1": {
+    "breaks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "counts": [14, 11, 13, 24, 30, 50, 110, 217, 12],
+    "density": [0.0291, 0.0229, 0.027, 0.0499, 0.0624, 0.104, 0.2287, 0.4511, 0.0249],
+    "mids": [1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5],
+    "col_name": ["apgar1"],
+    "mean": [7.7069],
+    "sd": [1.8895],
+    "na_count": [19],
+    "ci_lower": [7.5376],
+    "ci_upper": [7.8761],
+    "type": ["subject-level-num"]
+  },
+  "apgar5": {
+    "breaks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "counts": [3, 7, 2, 1, 4, 10, 38, 340, 50],
+    "density": [0.0066, 0.0154, 0.0044, 0.0022, 0.0088, 0.022, 0.0835, 0.7473, 0.1099],
+    "mids": [1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5],
+    "col_name": ["apgar5"],
+    "mean": [8.7846],
+    "sd": [1.1713],
+    "na_count": [45],
+    "ci_lower": [8.6767],
+    "ci_upper": [8.8925],
+    "type": ["subject-level-num"]
+  },
+  "mage": {
+    "breaks": [10, 15, 20, 25, 30, 35, 40, 45],
+    "counts": [3, 68, 171, 128, 68, 54, 8],
+    "density": [0.0012, 0.0272, 0.0684, 0.0512, 0.0272, 0.0216, 0.0032],
+    "mids": [12.5, 17.5, 22.5, 27.5, 32.5, 37.5, 42.5],
+    "col_name": ["mage"],
+    "mean": [26.862],
+    "sd": [6.0851],
+    "na_count": [0],
+    "ci_lower": [26.3273],
+    "ci_upper": [27.3967],
+    "type": ["subject-level-num"]
+  },
+  "mracen": {
+    "col_name": ["mracen"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "3",
+        "count": 39
+      },
+      {
+        "key": "5",
+        "count": 461
+      }
+    ]
+  },
+  "mrace": {
+    "col_name": ["mrace"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "Black",
+        "count": 39
+      },
+      {
+        "key": "White",
+        "count": 461
+      }
+    ]
+  },
+  "mmaritn": {
+    "col_name": ["mmaritn"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "1",
+        "count": 488
+      },
+      {
+        "key": "3",
+        "count": 6
+      },
+      {
+        "key": "4",
+        "count": 2
+      },
+      {
+        "key": "6",
+        "count": 4
+      }
+    ]
+  },
+  "mmarit": {
+    "col_name": ["mmarit"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "Divorced",
+        "count": 2
+      },
+      {
+        "key": "Married",
+        "count": 488
+      },
+      {
+        "key": "Separated",
+        "count": 6
+      },
+      {
+        "key": "Single",
+        "count": 4
+      }
+    ]
+  },
+  "meducyrs": {
+    "breaks": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18],
+    "counts": [1, 0, 10, 28, 80, 267, 39, 13, 1],
+    "density": [0.0011, 0, 0.0114, 0.0319, 0.0911, 0.3041, 0.0444, 0.0148, 0.0011],
+    "mids": [1, 3, 5, 7, 9, 11, 13, 15, 17],
+    "col_name": ["meducyrs"],
+    "mean": [11.2961],
+    "sd": [1.9917],
+    "na_count": [61],
+    "ci_lower": [11.1093],
+    "ci_upper": [11.483],
+    "type": ["subject-level-num"]
+  },
+  "sesn": {
+    "col_name": ["sesn"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "25",
+        "count": 2
+      },
+      {
+        "key": "38",
+        "count": 74
+      },
+      {
+        "key": "50",
+        "count": 165
+      },
+      {
+        "key": "63",
+        "count": 157
+      },
+      {
+        "key": "75",
+        "count": 39
+      },
+      {
+        "key": "..na..",
+        "count": 63
+      }
+    ]
+  },
+  "ses": {
+    "col_name": ["ses"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "           .",
+        "count": 63
+      },
+      {
+        "key": "Low",
+        "count": 2
+      },
+      {
+        "key": "Lower-middle",
+        "count": 74
+      },
+      {
+        "key": "Middle",
+        "count": 165
+      },
+      {
+        "key": "Upper",
+        "count": 39
+      },
+      {
+        "key": "Upper-middle",
+        "count": 157
+      }
+    ]
+  },
+  "parity": {
+    "breaks": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    "counts": [219, 100, 74, 42, 29, 17, 4, 5, 4, 0, 0, 0, 1],
+    "density": [0.4424, 0.202, 0.1495, 0.0848, 0.0586, 0.0343, 0.0081, 0.0101, 0.0081, 0, 0, 0, 0.002],
+    "mids": [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5],
+    "col_name": ["parity"],
+    "mean": [2.1717],
+    "sd": [1.9458],
+    "na_count": [5],
+    "ci_lower": [1.9999],
+    "ci_upper": [2.3436],
+    "type": ["subject-level-num"]
+  },
+  "gravida": {
+    "breaks": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+    "counts": [203, 98, 73, 44, 33, 21, 12, 6, 5, 0, 1, 0, 0, 1],
+    "density": [0.4085, 0.1972, 0.1469, 0.0885, 0.0664, 0.0423, 0.0241, 0.0121, 0.0101, 0, 0.002, 0, 0, 0.002],
+    "mids": [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 13.5],
+    "col_name": ["gravida"],
+    "mean": [2.4004],
+    "sd": [2.1409],
+    "na_count": [3],
+    "ci_lower": [2.2117],
+    "ci_upper": [2.5891],
+    "type": ["subject-level-num"]
+  },
+  "smoked": {
+    "col_name": ["smoked"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "0",
+        "count": 257
+      },
+      {
+        "key": "1",
+        "count": 239
+      },
+      {
+        "key": "..na..",
+        "count": 4
+      }
+    ]
+  },
+  "mcignum": {
+    "breaks": [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70],
+    "counts": [296, 54, 29, 71, 3, 17, 3, 9, 0, 1, 0, 1, 1, 5],
+    "density": [0.1208, 0.022, 0.0118, 0.029, 0.0012, 0.0069, 0.0012, 0.0037, 0, 0.0004, 0, 0.0004, 0.0004, 0.002],
+    "mids": [2.5, 7.5, 12.5, 17.5, 22.5, 27.5, 32.5, 37.5, 42.5, 47.5, 52.5, 57.5, 62.5, 67.5],
+    "col_name": ["mcignum"],
+    "mean": [8.1388],
+    "sd": [12.4512],
+    "na_count": [10],
+    "ci_lower": [7.0336],
+    "ci_upper": [9.244],
+    "type": ["subject-level-num"]
+  },
+  "preeclmp": {
+    "col_name": ["preeclmp"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "0",
+        "count": 468
+      },
+      {
+        "key": "1",
+        "count": 26
+      },
+      {
+        "key": "..na..",
+        "count": 6
+      }
+    ]
+  },
+  "comprisk": {
+    "col_name": ["comprisk"],
+    "type": ["subject-level-cat"],
+    "counts": [
+      {
+        "key": "chronic hypertension + mild gestational hypertension without proteinuria",
+        "count": 5
+      },
+      {
+        "key": "chronic hypertension + mild preeclampsia",
+        "count": 20
+      },
+      {
+        "key": "chronic hypertension + severe preeclampsia",
+        "count": 1
+      },
+      {
+        "key": "chronic hypertension only",
+        "count": 4
+      },
+      {
+        "key": "mild gestational hypertension alone",
+        "count": 18
+      },
+      {
+        "key": "mild gestational proteinuria alone",
+        "count": 4
+      },
+      {
+        "key": "mild preeclampsia (mild gestational HTN + mild gestational proteinuria)",
+        "count": 3
+      },
+      {
+        "key": "none",
+        "count": 431
+      },
+      {
+        "key": "severe gestational hypertension alone",
+        "count": 6
+      },
+      {
+        "key": "severe preeclampsia and eclampsia (severe gestational HTN + any of the following: mild/severe proteinuria, oliguria, pulmonary edema, or convulsion from gestation Wk 24 to postpartum Wk 2)",
+        "count": 2
+      },
+      {
+        "key": "..na..",
+        "count": 6
+      }
+    ]
+  },
+  "geniq": {
+    "col_name": ["geniq"],
+    "type": ["time-varying-num"],
+    "group_duration": ["week"],
+    "time_bins": {
+      "1": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [500],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      },
+      "18": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [460],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      },
+      "53": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [428],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      }
+    }
+  },
+  "sysbp": {
+    "col_name": ["sysbp"],
+    "type": ["time-varying-num"],
+    "group_duration": ["week"],
+    "time_bins": {
+      "1": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [500],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      },
+      "18": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [460],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      },
+      "53": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [428],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      }
+    }
+  },
+  "diabp": {
+    "col_name": ["diabp"],
+    "type": ["time-varying-num"],
+    "group_duration": ["week"],
+    "time_bins": {
+      "1": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [500],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      },
+      "18": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [460],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      },
+      "53": {
+        "M1": [null],
+        "M2": [null],
+        "n": [0],
+        "na_count": [428],
+        "mean": [null],
+        "sd": [null],
+        "ci_lower": [null],
+        "ci_upper": [null]
+      }
+    }
+  },
+  "random_time_var": {
+    "col_name": ["random_time_var"],
+    "type": ["time-varying-cat"],
+    "group_duration": ["week"],
+    "time_bins": {
+      "1": [
+        {
+          "key": "a",
+          "count": 493
+        },
+        {
+          "key": "c",
+          "count": 1
+        },
+        {
+          "key": "d",
+          "count": 1
+        },
+        {
+          "key": "f",
+          "count": 1
+        },
+        {
+          "key": "g",
+          "count": 0
+        },
+        {
+          "key": "i",
+          "count": 0
+        },
+        {
+          "key": "..na..",
+          "count": 4
+        }
+      ],
+      "18": [
+        {
+          "key": "a",
+          "count": 454
+        },
+        {
+          "key": "c",
+          "count": 1
+        },
+        {
+          "key": "d",
+          "count": 1
+        },
+        {
+          "key": "f",
+          "count": 0
+        },
+        {
+          "key": "g",
+          "count": 1
+        },
+        {
+          "key": "i",
+          "count": 2
+        },
+        {
+          "key": "..na..",
+          "count": 1
+        }
+      ],
+      "53": [
+        {
+          "key": "a",
+          "count": 423
+        },
+        {
+          "key": "c",
+          "count": 2
+        },
+        {
+          "key": "d",
+          "count": 0
+        },
+        {
+          "key": "f",
+          "count": 0
+        },
+        {
+          "key": "g",
+          "count": 1
+        },
+        {
+          "key": "i",
+          "count": 2
+        },
+        {
+          "key": "..na..",
+          "count": 0
+        }
+      ]
+    }
+  }
+}

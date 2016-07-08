@@ -1,0 +1,23 @@
+Package: hbgdStatSummary
+Title: Statistical Summaries for Datasets
+Version: 0.0.0.9000
+Authors@R: person("Barret", "Schloerke", email = "schloerke@gmail.com", role = c("aut", "cre"))
+Description: Makes summaries of large user over time datasets.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 3.3.1)
+Imports:
+    hbgd,
+    dplyr,
+    tidyr,
+    datadr,
+    purrr,
+    jsonlite,
+    magrittr,
+    graphics
+Suggests:
+    testthat,
+    readr
+RoxygenNote: 5.0.1
