@@ -1,12 +1,13 @@
 
 # @param dt subject level dataset
-summarize_subject_level <- function(dt, var_types) {
+summarize_subject_level <- function(dt, var_types, verbose) {
   summarize_with_fn_type(
     dt,
     vars = colnames(dt),
     var_types = var_types,
     fn_num = summarize_subject_level_num,
-    fn_cat = summarize_subject_level_cat
+    fn_cat = summarize_subject_level_cat,
+    verbose = verbose
   )
 }
 

@@ -5,10 +5,17 @@
 # @param fn_num numeric calc function
 # @param fn_cat category calc function
 # @param ... args passed onto fn's
-summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, ...) {
+summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, verbose = TRUE, ...) {
+  if (verbose) {
+    pb <- txtProgressBar(style = 3)
+  }
+
   purrr::map(
     vars,
     function(col_name) {
+      if (verbose) {
+        setTxtProgressBar(pb, which(col_name == vars) / length(vars))
+      }
       if (var_types[[col_name]] == "num") {
         fn <- fn_num
       } else {
@@ -18,7 +25,14 @@ summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, ...) {
       fn(dt, col_name, ...)
     }
   ) %>%
-    set_names(vars)
+    set_names(vars) ->
+  ret
+
+  if (verbose) {
+    close(pb)
+  }
+
+  ret
 }
 
 
@@ -29,9 +43,10 @@ summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, ...) {
 #' @param dt dataset to summarizes
 #' @param check boolean to determine if \code{check_data()} should be performed
 #' @param group_duration string of one of \code{c("week", "month", "quarter", "year")}
+#' @param verbose boolean to determine if progress bars should be displayed
 #' @export
 #' @rdname summarize_dataset
-summarize_dataset <- function(dt, check = TRUE, group_duration = "week") {
+summarize_dataset <- function(dt, check = TRUE, group_duration = "week", verbose = TRUE) {
 
   if (check) {
     check_data(dt)
@@ -51,8 +66,10 @@ summarize_dataset <- function(dt, check = TRUE, group_duration = "week") {
   subject_names_good
   sdd <- sdd[colnames(sdd) %in% subject_names_good]
 
-  distributions <- summarize_subject_level(sdd, data_var_types)
-  time <- summarize_time_varying(tdd, data_var_types, group_duration)
+  if (verbose) cat("Subject level summaries\n")
+  distributions <- summarize_subject_level(sdd, data_var_types, verbose)
+  if (verbose) cat("Time varying summaries\n")
+  time <- summarize_time_varying(tdd, data_var_types, group_duration, verbose)
 
   ret <- append(distributions, time[sort(names(time))])
 

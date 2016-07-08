@@ -2,7 +2,7 @@
 # @param dt time varying dataset
 # @param var_types list of column variable types by column name
 # @param group_duration string of "week", "four_weeks", "quarter" or "year"
-summarize_time_varying <- function(dt, var_types, group_duration) {
+summarize_time_varying <- function(dt, var_types, group_duration, verbose) {
 
   group_by_fn_ <- function(n) {
     function(ageweeks) {
@@ -44,6 +44,7 @@ summarize_time_varying <- function(dt, var_types, group_duration) {
     var_types = var_types,
     fn_num = summarize_time_varying_num,
     fn_cat = summarize_time_varying_cat,
+    verbose = verbose,
     group_by_fn = group_by_fn,
     group_duration = group_duration
   )
