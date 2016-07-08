@@ -5,7 +5,8 @@
 \alias{summarize_dataset_json}
 \title{Summarize Full dataset}
 \usage{
-summarize_dataset(dt, check = TRUE, group_duration = "week")
+summarize_dataset(dt, check = TRUE, group_duration = "week",
+  verbose = TRUE)
 
 summarize_dataset_json(..., pretty = TRUE)
 }
@@ -15,6 +16,8 @@ summarize_dataset_json(..., pretty = TRUE)
 \item{check}{boolean to determine if \code{check_data()} should be performed}
 
 \item{group_duration}{string of one of \code{c("week", "month", "quarter", "year")}}
+
+\item{verbose}{boolean to determine if progress bars should be displayed}
 
 \item{...}{all args directly passed to summarize_dataset}
 
