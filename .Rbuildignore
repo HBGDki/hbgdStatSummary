@@ -5,3 +5,4 @@ man-roxygen
 \.DS_Store
 .lintr
 general_structure.txt
+^js
