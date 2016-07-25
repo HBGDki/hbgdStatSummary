@@ -4,12 +4,12 @@
 \alias{summarize_dataset_file}
 \title{Summarize full dataset and save to file}
 \usage{
-summarize_dataset_file(file, ...)
+summarize_dataset_file(..., file)
 }
 \arguments{
-\item{file}{file to save to}
-
 \item{...}{args passed directly to \code{summarize_dataset_json}}
+
+\item{file}{file to save to}
 }
 \description{
 Create a full object that summarizes both subject level and time varying variables, then saves the json results to a file
