@@ -20,5 +20,5 @@ json <- summarize_dataset_json(dt)
 json <- summarize_dataset_json(dt, check = FALSE)
 
 # save output to a file
-json <- summarize_dataset_file(dt)
+summarize_dataset_file(dt, file = "output.json")
 ```
