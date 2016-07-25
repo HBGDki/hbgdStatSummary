@@ -5,7 +5,7 @@ summary statistics of datasets
 
 ```{r}
 # clone directory and 'cd' into it
-devtools::install()
+devtools::install("hbgd/hbgdStatSummary")
 ```
 
 # Example Usage
@@ -20,5 +20,5 @@ json <- summarize_dataset_json(dt)
 json <- summarize_dataset_json(dt, check = FALSE)
 
 # save output to a file
-summarize_dataset_file(dt, file = "output.json")
+summarize_dataset_file(dt, file = "cpp_summary.json")
 ```
