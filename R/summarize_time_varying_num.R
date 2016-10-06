@@ -73,7 +73,7 @@ summarize_time_varying_num <- function(
   #   }
   # }
   list(
-    col_name = col_name,
+    id = col_name,
     type = "time-varying-num",
     group_duration = group_duration,
     time_bins = moment_list
