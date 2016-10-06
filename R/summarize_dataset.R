@@ -116,7 +116,7 @@ summarize_dataset <- function(dt, check = TRUE, group_duration = "week", verbose
 #' @export
 summarize_dataset_json <- function(..., pretty = TRUE) {
   summarize_dataset(...) %>%
-    jsonlite::toJSON(pretty = pretty, na = "null")
+    jsonlite::toJSON(pretty = pretty, na = "null", auto_unbox = TRUE)
 }
 
 
