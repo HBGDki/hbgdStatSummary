@@ -52,6 +52,17 @@ summarize_dataset <- function(dt, check = TRUE, group_duration = "week", verbose
     check_data(dt)
   }
 
+  # remove all NA columns
+  is_na_cols <- sapply(dt, function(col) { all(is.na(col)) })
+  if (length(is_na_cols) > 0) {
+    if (verbose) {
+      cat("Removing ", sum(is_na_cols), " NA columns from data\n", sep = "")
+      cat("Bad cols: \n")
+      cat("  ", paste(names(dt)[is_na_cols], collapse = ", "), "\n", sep = "")
+    }
+    dt <- dt[!is_na_cols]
+  }
+
   dt <- get_data_attributes(dt)
   data_var_types <- vtype_list(dt)
 
