@@ -1,6 +1,6 @@
 Package: hbgdStatSummary
 Title: Statistical Summaries for Datasets
-Version: 0.0.0.9000
+Version: 0.0.1.9000
 Authors@R: person("Barret", "Schloerke", email = "schloerke@gmail.com", role = c("aut", "cre"))
 Description: Makes summaries of large user over time datasets.
 License: MIT + file LICENSE
