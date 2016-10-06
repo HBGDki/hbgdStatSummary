@@ -12,6 +12,7 @@ Imports:
     tidyr,
     datadr,
     purrr,
+    progress,
     jsonlite,
     magrittr,
     graphics

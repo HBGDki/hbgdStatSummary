@@ -7,14 +7,18 @@
 # @param ... args passed onto fn's
 summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, verbose = TRUE, ...) {
   if (verbose) {
-    pb <- txtProgressBar(style = 3)
+    pb <- progress_bar$new(
+      total = length(vars),
+      format = "  [:bar] :percent eta::eta",
+      clear = FALSE
+    )
   }
 
   purrr::map(
     vars,
     function(col_name) {
       if (verbose) {
-        setTxtProgressBar(pb, which(col_name == vars) / length(vars))
+        pb$tick()
       }
       if (var_types[[col_name]] == "num") {
         fn <- fn_num
@@ -27,10 +31,6 @@ summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, verbose 
   ) %>%
     set_names(vars) ->
   ret
-
-  if (verbose) {
-    close(pb)
-  }
 
   ret
 }
