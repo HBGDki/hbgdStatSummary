@@ -78,8 +78,7 @@ summarize_dataset <- function(dt, check = TRUE, group_duration = "week", verbose
   })
   if (sum(is_na_cols) > 0) {
     if (verbose) {
-      cat("Removing ", sum(is_na_cols), " NA columns from data\n", sep = "")
-      cat("Bad cols: \n")
+      cat("Removing ", sum(is_na_cols), " NA columns from data:\n", sep = "")
       cat("  ", paste(names(dt)[is_na_cols], collapse = ", "), "\n", sep = "")
     }
     dt <- dt[!is_na_cols]
