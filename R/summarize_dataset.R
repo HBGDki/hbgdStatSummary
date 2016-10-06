@@ -70,7 +70,9 @@ summarize_dataset <- function(dt, check = TRUE, group_duration = "week", verbose
 
 
   # remove all NA columns
-  is_na_cols <- sapply(dt, function(col) { all(is.na(col)) })
+  is_na_cols <- sapply(dt, function(col) {
+    all(is.na(col))
+  })
   if (length(is_na_cols) > 0) {
     if (verbose) {
       cat("Removing ", sum(is_na_cols), " NA columns from data\n", sep = "")
