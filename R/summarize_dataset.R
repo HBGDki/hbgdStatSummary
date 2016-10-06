@@ -48,6 +48,8 @@ summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, verbose 
 #' @rdname summarize_dataset
 summarize_dataset <- function(dt, check = TRUE, group_duration = "week", verbose = TRUE) {
 
+  colnames(dt) <- tolower(colnames(dt))
+
   if (check) {
     check_data(dt)
   }
