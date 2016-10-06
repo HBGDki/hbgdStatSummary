@@ -30,7 +30,7 @@ summarize_time_varying_cat <- function(
   count_list
 
   list(
-    col_name = col_name,
+    id = col_name,
     type = "time-varying-cat",
     group_duration = group_duration,
     time_bins = count_list

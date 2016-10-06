@@ -27,14 +27,14 @@ summarize_subject_level_num <- function(dt, col_name) {
 
   ans$xname <- NULL
   ans$equidist <- NULL
-  ans$col_name <- col_name
+  ans$id <- col_name
   ans$mean <- mean(x, na.rm = TRUE)
   ans$sd <- sd(x, na.rm = TRUE)
   ans$na_count <- na_count
   ans$ci_lower <- ans$sd * qt(0.025, df = length(x) - 1) / sqrt(length(x)) + ans$mean
   ans$ci_upper <- ans$sd * qt(0.975, df = length(x) - 1) / sqrt(length(x)) + ans$mean
   ans$type <- "subject-level-num"
-  ans$col_name <- col_name
+  ans$id <- col_name
 
   ans
 }
@@ -44,7 +44,7 @@ summarize_subject_level_num <- function(dt, col_name) {
 # @param col_name categorical column in question
 summarize_subject_level_cat <- function(dt, col_name) {
   list(
-    col_name = col_name,
+    id = col_name,
     type = "subject-level-cat",
     counts = count_info(dt, col_name, sort(unique(dt[[col_name]]), na.last = TRUE))
   )

@@ -3,7 +3,7 @@ General structure:
   (if subject level categorical)
   COLUMN_NAME: {
     type: "subject-level-cat",
-    col_name: COLUMN_NAME
+    id: COLUMN_NAME
     counts: [
       {
         key: KEY,
@@ -20,7 +20,7 @@ General structure:
 
   (if subject level numeric)
   COLUMN_NAME: {
-    col_name: COLUMN_NAME,
+    id: COLUMN_NAME,
     type: "subject-level-num",
     breaks: [NUM, NUM, ...],
     counts: [NUM, NUM, ...],
@@ -35,7 +35,7 @@ General structure:
 
   (if time varying numeric)
   COLUMN_NAME: {
-    col_name: COLUMN_NAME,
+    id: COLUMN_NAME,
     type: "time-varying-num",
     group_duration: one of "week", "four_weeks", "quarter", "year",
     time_bins: {
@@ -54,9 +54,8 @@ General structure:
   }
 
   (if time varying numeric)
-  (TO BE IMPLEMENTED)
   COLUMN_NAME: {
-    col_name: COLUMN_NAME,
+    id: COLUMN_NAME,
     type: "time-varying-cat",
     group_duration: one of "week", "four_weeks", "quarter", "year",
     time_bins: {
