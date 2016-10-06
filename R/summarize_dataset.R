@@ -58,6 +58,7 @@ summarize_dataset <- function(dt, check = TRUE, group_duration = "week", verbose
   time_breaks <- seq(from = 1, by = 7, length.out = 2 * 52 + 1)
 
   # make sure they are under two years old
+  dt <- dt[!is.na(dt$agedays), ]
   dt <- dt[
     dt[["agedays"]] < max(time_breaks) &  # remove old time
     dt[["agedays"]] >= min(time_breaks),  # remove 'pre-birth' time
