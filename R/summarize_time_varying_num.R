@@ -57,6 +57,11 @@ summarize_time_varying_num <- function(
     set_names(by_group$agegroup) ->
   moment_list
 
+  is_0_count <- sapply(moment_list, `[[`, "n") %>% magrittr::equals(0)
+  if (any(is_0_count)) {
+    moment_list <- moment_list[!is_0_count]
+  }
+
   # {
   #   col_name: COLUMN_NAME,
   #   type: "time-varying-num",

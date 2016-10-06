@@ -29,6 +29,15 @@ summarize_time_varying_cat <- function(
     set_names(by_group$agegroup) ->
   count_list
 
+  is_all_na <- sapply(count_list, function(count_dt) {
+    if (identical(unique(count_dt$key), "..na..")) {
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
+  })
+  count_list <- count_list[!is_all_na]
+
   list(
     id = col_name,
     type = "time-varying-cat",
