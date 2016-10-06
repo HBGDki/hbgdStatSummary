@@ -16,23 +16,6 @@ summarize_time_varying <- function(dt, var_types, group_duration, verbose) {
     "year" = group_by_fn_(52)
   )
 
-  # get days sep by 1 week for up to 2 years
-  time_breaks <- seq(from = 1, by = 7, length.out = 2 * 52 + 1)
-
-  # make sure they are under two years old
-  dt <- dt[
-    dt[["agedays"]] < max(time_breaks) &  # remove old time
-    dt[["agedays"]] >= min(time_breaks),  # remove 'pre-birth' time
-  ]
-
-  # find out which week the record was taken
-  lapply(dt$agedays, function(day) {
-    which(day >= time_breaks[-length(time_breaks)] & day < time_breaks[-1])
-  }) %>%
-    unlist() ->
-  ageweeks
-
-  dt$ageweeks <- ageweeks
 
   # make sure the variables in question are everything but the time indicators
   vars <- colnames(dt)
