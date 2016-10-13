@@ -20,6 +20,8 @@ summarize_dataset_json(..., pretty = TRUE)
 
 \item{verbose}{boolean to determine if progress bars should be displayed}
 
+\item{time_breaks}{time breaks to be used in data}
+
 \item{...}{all args directly passed to summarize_dataset}
 
 \item{pretty}{boolean to determine if the json should be pretty printed}

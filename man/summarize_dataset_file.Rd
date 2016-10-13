@@ -10,6 +10,8 @@ summarize_dataset_file(..., file, pretty)
 \item{...}{args passed directly to \code{summarize_dataset_json}}
 
 \item{file}{file to save to}
+
+\item{pretty}{boolean to determine if the json should be pretty printed}
 }
 \description{
 Create a full object that summarizes both subject level and time varying variables, then saves the json results to a file

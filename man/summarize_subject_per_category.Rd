@@ -8,6 +8,15 @@
 summarize_subject_per_category(dt, check = TRUE, verbose = TRUE,
   time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 + 1))
 }
+\arguments{
+\item{dt}{dataset to summarizes}
+
+\item{check}{boolean to determine if \code{check_data()} should be performed}
+
+\item{verbose}{boolean to determine if progress bars should be displayed}
+
+\item{time_breaks}{time breaks to be used in data}
+}
 \description{
 Summarise subject level info per cateogry
 '
