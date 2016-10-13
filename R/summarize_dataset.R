@@ -44,9 +44,16 @@ summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, verbose 
 #' @param check boolean to determine if \code{check_data()} should be performed
 #' @param group_duration string of one of \code{c("week", "month", "quarter", "year")}
 #' @param verbose boolean to determine if progress bars should be displayed
+#' @param time_breaks time breaks to be used in data
 #' @export
 #' @rdname summarize_dataset
-summarize_dataset <- function(dt, check = TRUE, group_duration = "week", verbose = TRUE, time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 + 1)) {
+summarize_dataset <- function(
+  dt,
+  check = TRUE,
+  group_duration = "week",
+  verbose = TRUE,
+  time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 + 1)
+) {
 
   colnames(dt) <- tolower(colnames(dt))
 
@@ -127,6 +134,7 @@ summarize_dataset_json <- function(..., pretty = TRUE) {
 #'
 #' Create a full object that summarizes both subject level and time varying variables, then saves the json results to a file
 #'
+#' @param pretty boolean to determine if the json should be pretty printed
 #' @param ... args passed directly to \code{summarize_dataset_json}
 #' @param file file to save to
 #' @export
@@ -187,9 +195,18 @@ to_file <- function(x, file, pretty) {
 
 #' Summarise subject level info per cateogry
 #' '
+#' @param dt dataset to summarizes
+#' @param check boolean to determine if \code{check_data()} should be performed
+#' @param verbose boolean to determine if progress bars should be displayed
+#' @param time_breaks time breaks to be used in data
 #' @importFrom magrittr equals not
 #' @export
-summarize_subject_per_category <- function(dt, check = TRUE, verbose = TRUE, time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 + 1)) {
+summarize_subject_per_category <- function(
+  dt,
+  check = TRUE,
+  verbose = TRUE,
+  time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 + 1)
+) {
 
   colnames(dt) <- tolower(colnames(dt))
 
@@ -243,14 +260,15 @@ summarize_subject_per_category <- function(dt, check = TRUE, verbose = TRUE, tim
   if (verbose) cat("Subject level summaries\n")
   distributions <- summarize_subject_level(sdd, data_var_types, verbose)
 
+  # get numeric data
   sapply(distributions, `[[`, "type") %>%
     equals("subject-level-num") %>%
     which() %>%
     names() ->
   numeric_subject_columns
   num_distro <- sdd[colnames(sdd) %in% numeric_subject_columns]
-  num_distro_types <- data_var_types[names(data_var_types) %in% numeric_subject_columns]
 
+  # get category columns
   sapply(distributions, `[[`, "type") %>%
     equals("subject-level-num") %>%
     not() %>%
@@ -258,14 +276,22 @@ summarize_subject_per_category <- function(dt, check = TRUE, verbose = TRUE, tim
     names() ->
   cat_subject_columns
 
-  ret <- lapply(cat_subject_columns, function(col) {
+  # for each category and key, summarise all numeric columns
+  if (verbose) {
+    pb <- progress_bar$new(
+      total = length(cat_subject_columns),
+      format = " [:bar] :percent eta::eta (:category)",
+      clear = FALSE
+    )
+  }
+  ret <- lapply(seq_along(cat_subject_columns), function(col_pos) {
+    col <- cat_subject_columns[col_pos]
+    if (verbose) pb$tick(tokens = list(category = col))
     keys <- distributions[[col]]$counts$key
     col_dt <- sdd[[col]]
 
     col_ret <- lapply(keys, function(key) {
-      key_dt <- num_distro[col_dt == key,]
-
-      str(key_dt)
+      key_dt <- num_distro[col_dt == key, ]
       lapply(
         numeric_subject_columns,
         function(numeric_col) {
