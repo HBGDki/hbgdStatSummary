@@ -22,6 +22,24 @@ summarize_subject_level_num <- function(dt, col_name) {
   # get hist info
   is_na <- is.na(x)
   na_count <- sum(is_na)
+
+  if (na_count == length(x)) {
+    return(list(
+      id = col_name,
+      type = "subject-level-num",
+      breaks = NA,
+      counts = NA,
+      density = NA,
+      mids = NA,
+      mean = NA,
+      sd = NA,
+      na_count = na_count,
+      sd = NA,
+      ci_lower = NA,
+      ci_upper = NA
+    ))
+  }
+
   x <- x[!is_na]
   ans <- hist(x, plot = FALSE) %>% unclass()
 
@@ -31,8 +49,13 @@ summarize_subject_level_num <- function(dt, col_name) {
   ans$mean <- mean(x, na.rm = TRUE)
   ans$sd <- sd(x, na.rm = TRUE)
   ans$na_count <- na_count
-  ans$ci_lower <- ans$sd * qt(0.025, df = length(x) - 1) / sqrt(length(x)) + ans$mean
-  ans$ci_upper <- ans$sd * qt(0.975, df = length(x) - 1) / sqrt(length(x)) + ans$mean
+  if (length(x) > 1) {
+    ans$ci_lower <- ans$sd * qt(0.025, df = length(x) - 1) / sqrt(length(x)) + ans$mean
+    ans$ci_upper <- ans$sd * qt(0.975, df = length(x) - 1) / sqrt(length(x)) + ans$mean
+  } else {
+    ans$ci_lower <- NA
+    ans$ci_upper <- NA
+  }
   ans$type <- "subject-level-num"
   ans$id <- col_name
 
