@@ -152,12 +152,12 @@ summarize_dataset_file <- function(..., file, pretty) {
 #' @param file file to print the json
 #' @rdname to_json
 #' @export
-to_json <- function(x, pretty) {
+to_json <- function(x, pretty = FALSE) {
   jsonlite::toJSON(x, pretty = pretty, na = "null", auto_unbox = TRUE)
 }
 #' @rdname to_json
 #' @export
-to_file <- function(x, file, pretty) {
+to_file <- function(x, file, pretty = FALSE) {
   x <- to_json(x, pretty)
   cat(x, file = file)
   cat("\n", file = file, append = TRUE)

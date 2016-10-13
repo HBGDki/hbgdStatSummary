@@ -5,9 +5,9 @@
 \alias{to_json}
 \title{Save methods}
 \usage{
-to_json(x, pretty)
+to_json(x, pretty = FALSE)
 
-to_file(x, file, pretty)
+to_file(x, file, pretty = FALSE)
 }
 \arguments{
 \item{x}{item in question}
