@@ -6,7 +6,8 @@
 \title{Summarize full dataset}
 \usage{
 summarize_dataset(dt, check = TRUE, group_duration = "week",
-  verbose = TRUE)
+  verbose = TRUE, time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 +
+  1))
 
 summarize_dataset_json(..., pretty = TRUE)
 }

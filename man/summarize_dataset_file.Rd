@@ -4,7 +4,7 @@
 \alias{summarize_dataset_file}
 \title{Summarize full dataset and save to file}
 \usage{
-summarize_dataset_file(..., file)
+summarize_dataset_file(..., file, pretty)
 }
 \arguments{
 \item{...}{args passed directly to \code{summarize_dataset_json}}
