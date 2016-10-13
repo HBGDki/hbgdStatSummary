@@ -14,11 +14,15 @@ devtools::install("hbgd/hbgdStatSummary")
 dt <- hbgd::cpp # or any other data.frame
 
 # summarize data and produce a json string
-json <- summarize_dataset_json(dt)
+json <- summarize_dataset(dt) %>% to_json()
+
 
 # skip data checks
-json <- summarize_dataset_json(dt, check = FALSE)
+json <- summarize_dataset(dt, check = FALSE) %>% to_json()
 
 # save output to a file
-summarize_dataset_file(dt, file = "cpp_summary.json")
+json <- summarize_dataset(dt) %>% to_file(file = "cpp_summary.json")
+
+# summarize all numeric subject columns by each each of the categorical subject columns
+json <- summarize_subject_per_category(dt) %>% to_json(pretty = TRUE)
 ```
