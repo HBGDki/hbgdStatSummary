@@ -46,7 +46,7 @@ summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, verbose 
 #' @param verbose boolean to determine if progress bars should be displayed
 #' @export
 #' @rdname summarize_dataset
-summarize_dataset <- function(dt, check = TRUE, group_duration = "week", verbose = TRUE) {
+summarize_dataset <- function(dt, check = TRUE, group_duration = "week", verbose = TRUE, time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 + 1)) {
 
   colnames(dt) <- tolower(colnames(dt))
 
@@ -55,7 +55,7 @@ summarize_dataset <- function(dt, check = TRUE, group_duration = "week", verbose
   }
 
   # get days sep by 1 week for up to 2 years
-  time_breaks <- seq(from = 1, by = 7, length.out = 2 * 52 + 1)
+  # time_breaks <- seq(from = 1, by = 7, length.out = 2 * 52 + 1)
 
   # make sure they are under two years old
   dt <- dt[!is.na(dt$agedays), ]
