@@ -278,7 +278,7 @@ summarize_subject_per_category <- function(
 
   # for each category and key, summarise all numeric columns
   if (verbose) {
-    message("Subject level summaries per category")
+    cat("Subject level summaries per category\n")
     pb <- progress_bar$new(
       total = length(cat_subject_columns),
       format = "  [:bar] :percent eta::eta (:category)",
