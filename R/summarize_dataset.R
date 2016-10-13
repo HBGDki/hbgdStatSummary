@@ -119,8 +119,7 @@ summarize_dataset <- function(dt, check = TRUE, group_duration = "week", verbose
 #' @rdname summarize_dataset
 #' @export
 summarize_dataset_json <- function(..., pretty = TRUE) {
-  summarize_dataset(...) %>%
-    jsonlite::toJSON(pretty = pretty, na = "null", auto_unbox = TRUE)
+  summarize_dataset(...) %>% to_json(pretty = pretty)
 }
 
 
@@ -131,10 +130,159 @@ summarize_dataset_json <- function(..., pretty = TRUE) {
 #' @param ... args passed directly to \code{summarize_dataset_json}
 #' @param file file to save to
 #' @export
-summarize_dataset_file <- function(..., file) {
-  ret <- summarize_dataset_json(...)
-  cat(ret, file = file)
-  cat("\n", file = file, append = TRUE)
+summarize_dataset_file <- function(..., file, pretty) {
+  ret <- summarize_dataset(...)
+  json <- to_file(ret, file, pretty)
+  invisible(json)
+}
 
-  invisible(ret)
+
+#' Save methods
+#'
+#' @param x item in question
+#' @param pretty boolean to pretty print the json
+#' @param file file to print the json
+#' @rdname to_json
+#' @export
+to_json <- function(x, pretty) {
+  jsonlite::toJSON(x, pretty = pretty, na = "null", auto_unbox = TRUE)
+}
+#' @rdname to_json
+#' @export
+to_file <- function(x, file, pretty) {
+  x <- to_json(x, pretty)
+  cat(x, file = file)
+  cat("\n", file = file, append = TRUE)
+  x
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#' Summarise subject level info per cateogry
+#' '
+#' @importFrom magrittr equals not
+#' @export
+summarize_subject_per_category <- function(dt, check = TRUE, verbose = TRUE, time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 + 1)) {
+
+  colnames(dt) <- tolower(colnames(dt))
+
+  if (check) {
+    check_data(dt)
+  }
+
+  # get days sep by 1 week for up to 2 years
+  # time_breaks <- seq(from = 1, by = 7, length.out = 2 * 52 + 1)
+
+  # make sure they are under two years old
+  dt <- dt[!is.na(dt$agedays), ]
+  dt <- dt[
+    dt[["agedays"]] < max(time_breaks) &  # remove old time
+    dt[["agedays"]] >= min(time_breaks),  # remove 'pre-birth' time
+  ]
+
+  # find out which week the record was taken
+  lapply(dt$agedays, function(day) {
+    which(day >= time_breaks[-length(time_breaks)] & day < time_breaks[-1])
+  }) %>%
+    unlist() ->
+  dt$ageweeks
+
+
+  # remove all NA columns
+  is_na_cols <- sapply(dt, function(col) {
+    all(is.na(col))
+  })
+  if (sum(is_na_cols) > 0) {
+    if (verbose) {
+      cat("Removing ", sum(is_na_cols), " NA columns from data:\n", sep = "")
+      cat("  ", paste(names(dt)[is_na_cols], collapse = ", "), "\n", sep = "")
+    }
+    dt <- dt[!is_na_cols]
+  }
+
+  dt <- get_data_attributes(dt)
+  data_var_types <- vtype_list(dt)
+
+  sdd <- get_subject_data(dt)
+
+  # only keep non subject id vars
+  attr(dt, "hbgd") %>%
+    extract2("var_summ") %>%
+    filter(type != "subject id") %>%
+    extract2("variable") ->
+  subject_names_good
+  sdd <- sdd[colnames(sdd) %in% subject_names_good]
+
+  if (verbose) cat("Subject level summaries\n")
+  distributions <- summarize_subject_level(sdd, data_var_types, verbose)
+
+  sapply(distributions, `[[`, "type") %>%
+    equals("subject-level-num") %>%
+    which() %>%
+    names() ->
+  numeric_subject_columns
+  num_distro <- sdd[colnames(sdd) %in% numeric_subject_columns]
+  num_distro_types <- data_var_types[names(data_var_types) %in% numeric_subject_columns]
+
+  sapply(distributions, `[[`, "type") %>%
+    equals("subject-level-num") %>%
+    not() %>%
+    which() %>%
+    names() ->
+  cat_subject_columns
+
+  ret <- lapply(cat_subject_columns, function(col) {
+    keys <- distributions[[col]]$counts$key
+    col_dt <- sdd[[col]]
+
+    col_ret <- lapply(keys, function(key) {
+      key_dt <- num_distro[col_dt == key,]
+
+      str(key_dt)
+      lapply(
+        numeric_subject_columns,
+        function(numeric_col) {
+          list(
+            category_column = col,
+            category_key = key,
+            numeric_column = numeric_col,
+            dist = summarize_subject_level_num(key_dt, numeric_col)
+          )
+        }
+      )
+    })
+
+    unlist(col_ret, recursive = FALSE)
+  })
+
+  ret <- unlist(ret, recursive = FALSE)
+
+  ret
 }
