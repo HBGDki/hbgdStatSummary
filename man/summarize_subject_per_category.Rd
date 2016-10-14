@@ -5,13 +5,16 @@
 \title{Summarise subject level info per cateogry
 '}
 \usage{
-summarize_subject_per_category(dt, check = TRUE, verbose = TRUE,
-  time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 + 1))
+summarize_subject_per_category(dt, check = TRUE, group_duration = "week",
+  verbose = TRUE, time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 +
+  1))
 }
 \arguments{
 \item{dt}{dataset to summarizes}
 
 \item{check}{boolean to determine if \code{check_data()} should be performed}
+
+\item{group_duration}{string of one of \code{c("week", "month", "quarter", "year")}}
 
 \item{verbose}{boolean to determine if progress bars should be displayed}
 
