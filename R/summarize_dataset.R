@@ -84,14 +84,15 @@ summarize_dataset <- function(
     all(is.na(col))
   })
   if (sum(is_na_cols) > 0) {
-    if (verbose) {
-      cat("Removing ", sum(is_na_cols), " NA columns from data:\n", sep = "")
-      cat("  ", paste(names(dt)[is_na_cols], collapse = ", "), "\n", sep = "")
-    }
+    # always print, as it's changing the data
+    cat("Removing ", sum(is_na_cols), " NA columns from data:\n", sep = "")
+    cat("  ", paste(names(dt)[is_na_cols], collapse = ", "), "\n", sep = "")
     dt <- dt[!is_na_cols]
   }
 
-  dt <- get_data_attributes(dt)
+  if (is.null(attr(dt, "hbgd"))) {
+    dt <- get_data_attributes(dt)
+  }
   data_var_types <- vtype_list(dt)
 
   tdd <- get_time_data(dt)
@@ -197,6 +198,7 @@ to_file <- function(x, file, pretty = FALSE) {
 #' '
 #' @param dt dataset to summarizes
 #' @param check boolean to determine if \code{check_data()} should be performed
+#' @param group_duration string of one of \code{c("week", "month", "quarter", "year")}
 #' @param verbose boolean to determine if progress bars should be displayed
 #' @param time_breaks time breaks to be used in data
 #' @importFrom magrittr equals not
@@ -204,6 +206,7 @@ to_file <- function(x, file, pretty = FALSE) {
 summarize_subject_per_category <- function(
   dt,
   check = TRUE,
+  group_duration = "week",
   verbose = TRUE,
   time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 + 1)
 ) {
@@ -237,10 +240,8 @@ summarize_subject_per_category <- function(
     all(is.na(col))
   })
   if (sum(is_na_cols) > 0) {
-    if (verbose) {
-      cat("Removing ", sum(is_na_cols), " NA columns from data:\n", sep = "")
-      cat("  ", paste(names(dt)[is_na_cols], collapse = ", "), "\n", sep = "")
-    }
+    cat("Removing ", sum(is_na_cols), " NA columns from data:\n", sep = "")
+    cat("  ", paste(names(dt)[is_na_cols], collapse = ", "), "\n", sep = "")
     dt <- dt[!is_na_cols]
   }
 
@@ -276,40 +277,96 @@ summarize_subject_per_category <- function(
     names() ->
   cat_subject_columns
 
+  lapply(
+    cat_subject_columns,
+    function(col) {
+      keys <- distributions[[col]]$counts$key
+      col_dt <- dt[[col]]
+      data_frame(
+        col = col,
+        key = keys,
+        is_key = lapply(keys, function(key) {
+          if (key == "..na..") {
+            is.na(col_dt)
+          } else {
+            col_dt == key
+          }
+        })
+      )
+    }
+  ) %>%
+    bind_rows() ->
+  col_key_combos
+
   # for each category and key, summarise all numeric columns
   if (verbose) {
     cat("Subject level summaries per category\n")
     pb <- progress_bar$new(
-      total = length(cat_subject_columns),
+      total = nrow(col_key_combos),
       format = "  [:bar] :percent eta::eta (:category)",
       clear = FALSE
     )
+    pb$tick(0)
   }
-  ret <- lapply(seq_along(cat_subject_columns), function(col_pos) {
-    col <- cat_subject_columns[col_pos]
+
+  # only keep non subject id vars
+  attr(dt, "hbgd") %>%
+    extract2("var_summ") %>%
+    filter(type != "subject id") %>%
+    extract2("variable") ->
+  subject_names_good
+
+  ret <- lapply(seq_len(nrow(col_key_combos)), function(combo_pos) {
+    row <- col_key_combos[combo_pos, ]
+    col <- col_key_combos$col[[combo_pos]]
+    key <- col_key_combos$key[[combo_pos]]
+    is_key <- col_key_combos$is_key[[combo_pos]]
+
+    key_dt <- dt[is_key, ]
+
+    tdd <- get_time_data(key_dt)
+    sdd <- get_subject_data(key_dt)
+
+    # only keep non subject id vars
+    sdd <- sdd[colnames(sdd) %in% subject_names_good]
+
+    distributions <- summarize_subject_level(sdd, data_var_types, verbose = FALSE)
+    time <- summarize_time_varying(tdd, data_var_types, group_duration, verbose = FALSE)
+
+    summary <- append(distributions, time[sort(names(time))])
+
+    # order results to be the same as the incoming data
+    summary <- summary[colnames(dt)]
+
+
+    # summary <- summarize_dataset(
+    #   key_dt,
+    #   check = check, time_breaks = time_breaks,
+    #   verbose = FALSE, group_duration = group_duration
+    # )
+
     if (verbose) pb$tick(tokens = list(category = col))
-    keys <- distributions[[col]]$counts$key
-    col_dt <- sdd[[col]]
 
-    col_ret <- lapply(keys, function(key) {
-      key_dt <- num_distro[col_dt == key, ]
-      lapply(
-        numeric_subject_columns,
-        function(numeric_col) {
-          list(
-            category_column = col,
-            category_key = key,
-            numeric_column = numeric_col,
-            dist = summarize_subject_level_num(key_dt, numeric_col)
-          )
-        }
-      )
-    })
-
-    unlist(col_ret, recursive = FALSE)
+    list(
+      category_column = col,
+      category_key = key,
+      summary = summary
+    )
+    #
+    # lapply(
+    #   numeric_subject_columns,
+    #   function(numeric_col) {
+    #     list(
+    #       category_column = col,
+    #       category_key = key,
+    #       numeric_column = numeric_col,
+    #       dist = summarize_subject_level_num(key_dt, numeric_col)
+    #     )
+    #   }
+    # )
   })
 
-  ret <- unlist(ret, recursive = FALSE)
+  # ret <- unlist(ret, recursive = FALSE)
 
   ret
 }
