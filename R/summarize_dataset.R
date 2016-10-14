@@ -160,8 +160,8 @@ to_json <- function(x, pretty = FALSE) {
 #' @export
 to_file <- function(x, file, pretty = FALSE) {
   x <- to_json(x, pretty)
-  cat(x, file = file)
-  cat("\n", file = file, append = TRUE)
+  readr::write_file(x, path = file)
+  readr::write_file("\n", path = file, append = TRUE)
   x
 }
 

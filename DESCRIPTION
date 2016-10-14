@@ -15,7 +15,8 @@ Imports:
     progress,
     jsonlite,
     magrittr,
-    graphics
+    graphics,
+    readr
 Suggests:
     testthat,
     readr
