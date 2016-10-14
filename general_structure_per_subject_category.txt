@@ -3,20 +3,7 @@ General structure:
   {
     category_column: COLUMN_NAME,
     category_key: KEY,
-    numeric_column: COLUMN_NAME,
-    dist: {
-      id: COLUMN_NAME,
-      type: "subject-level-num",
-      breaks: [NUM, NUM, ...],
-      counts: [NUM, NUM, ...],
-      density: [NUM, NUM, ...],
-      mids: [NUM, NUM, ...],
-      mean: NUM,
-      sd: NUM,
-      ci_lower: NUM,
-      ci_upper: NUM,
-      na_count: NUM
-    }
+    summary: GENERAL SUMMARY STRUCTURE
   },
   ...
 ]
