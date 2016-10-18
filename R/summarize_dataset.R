@@ -228,12 +228,7 @@ summarize_subject_per_category <- function(
   ]
 
   # find out which week the record was taken
-  lapply(dt$agedays, function(day) {
-    which(day >= time_breaks[-length(time_breaks)] & day < time_breaks[-1])
-  }) %>%
-    unlist() ->
-  dt$ageweeks
-
+  dt$ageweeks <- floor(dt$agedays / 7)
 
   # remove all NA columns
   is_na_cols <- sapply(dt, function(col) {
