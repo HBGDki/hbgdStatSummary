@@ -44,7 +44,7 @@ summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, verbose 
 #' @param check boolean to determine if \code{check_data()} should be performed
 #' @param group_duration string of one of \code{c("week", "month", "quarter", "year")}
 #' @param verbose boolean to determine if progress bars should be displayed
-#' @param time_breaks time breaks to be used in data
+#' @param agedays_min,agedays_max min and max agedays allowed
 #' @export
 #' @rdname summarize_dataset
 summarize_dataset <- function(
@@ -52,7 +52,8 @@ summarize_dataset <- function(
   check = TRUE,
   group_duration = "week",
   verbose = TRUE,
-  time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 + 1)
+  agedays_min = -365,
+  agedays_max = 265*2
 ) {
 
   colnames(dt) <- tolower(colnames(dt))
@@ -67,16 +68,12 @@ summarize_dataset <- function(
   # make sure they are under two years old
   dt <- dt[!is.na(dt$agedays), ]
   dt <- dt[
-    dt[["agedays"]] < max(time_breaks) &  # remove old time
-    dt[["agedays"]] >= min(time_breaks),  # remove 'pre-birth' time
+    dt[["agedays"]] <= agedays_max &  # remove old time
+    dt[["agedays"]] >= agedays_min,  # remove 'pre-birth' time
   ]
 
   # find out which week the record was taken
-  lapply(dt$agedays, function(day) {
-    which(day >= time_breaks[-length(time_breaks)] & day < time_breaks[-1])
-  }) %>%
-    unlist() ->
-  dt$ageweeks
+  dt$ageweeks <- floor(dt$agedays / 7)
 
 
   # remove all NA columns
@@ -200,7 +197,7 @@ to_file <- function(x, file, pretty = FALSE) {
 #' @param check boolean to determine if \code{check_data()} should be performed
 #' @param group_duration string of one of \code{c("week", "month", "quarter", "year")}
 #' @param verbose boolean to determine if progress bars should be displayed
-#' @param time_breaks time breaks to be used in data
+#' @param agedays_min,agedays_max min and max agedays allowed
 #' @importFrom magrittr equals not
 #' @export
 summarize_subject_per_category <- function(
@@ -208,7 +205,8 @@ summarize_subject_per_category <- function(
   check = TRUE,
   group_duration = "week",
   verbose = TRUE,
-  time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 + 1)
+  agedays_min = -365,
+  agedays_max = 365*2
 ) {
 
   colnames(dt) <- tolower(colnames(dt))
@@ -223,8 +221,8 @@ summarize_subject_per_category <- function(
   # make sure they are under two years old
   dt <- dt[!is.na(dt$agedays), ]
   dt <- dt[
-    dt[["agedays"]] < max(time_breaks) &  # remove old time
-    dt[["agedays"]] >= min(time_breaks),  # remove 'pre-birth' time
+    dt[["agedays"]] <= agedays_max &  # remove old time
+    dt[["agedays"]] >= agedays_min,  # remove 'pre-birth' time
   ]
 
   # find out which week the record was taken

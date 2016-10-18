@@ -6,8 +6,7 @@
 \title{Summarize full dataset}
 \usage{
 summarize_dataset(dt, check = TRUE, group_duration = "week",
-  verbose = TRUE, time_breaks = seq(from = 1, by = 7, length.out = 2 * 52 +
-  1))
+  verbose = TRUE, agedays_min = -365, agedays_max = 265 * 2)
 
 summarize_dataset_json(..., pretty = TRUE)
 }
@@ -20,7 +19,7 @@ summarize_dataset_json(..., pretty = TRUE)
 
 \item{verbose}{boolean to determine if progress bars should be displayed}
 
-\item{time_breaks}{time breaks to be used in data}
+\item{agedays_min, agedays_max}{min and max agedays allowed}
 
 \item{...}{all args directly passed to summarize_dataset}
 
