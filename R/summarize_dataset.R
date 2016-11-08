@@ -297,7 +297,8 @@ summarize_subject_per_category <- function(
     pb <- progress_bar$new(
       total = nrow(col_key_combos),
       format = "  [:bar] :percent eta::eta (:category/:key)",
-      clear = FALSE
+      clear = FALSE,
+      show_after = 0
     )
     pb$tick(0)
   }
