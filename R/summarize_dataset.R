@@ -311,12 +311,17 @@ summarize_subject_per_category <- function(
   subject_names_good
 
   ret <- lapply(seq_len(nrow(col_key_combos)), function(combo_pos) {
+
     row <- col_key_combos[combo_pos, ]
     col <- col_key_combos$col[[combo_pos]]
     key <- col_key_combos$key[[combo_pos]]
     is_key <- col_key_combos$is_key[[combo_pos]]
 
+    if (verbose) pb$tick(tokens = list(category = col, key = key))
+
     key_dt <- dt[is_key, ]
+    # transfer the attr so that the columns are selected according to the whole dataset
+    attr(key_dt, "hbgd") <- attr(dt, "hbgd")
 
     tdd <- get_time_data(key_dt)
     sdd <- get_subject_data(key_dt)
@@ -338,8 +343,6 @@ summarize_subject_per_category <- function(
     #   check = check, time_breaks = time_breaks,
     #   verbose = FALSE, group_duration = group_duration
     # )
-
-    if (verbose) pb$tick(tokens = list(category = col, key = key))
 
     list(
       category_column = col,
