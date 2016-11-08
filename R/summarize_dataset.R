@@ -296,7 +296,7 @@ summarize_subject_per_category <- function(
     cat("Subject level summaries per category\n")
     pb <- progress_bar$new(
       total = nrow(col_key_combos),
-      format = "  [:bar] :percent eta::eta (:category)",
+      format = "  [:bar] :percent eta::eta (:category/:key)",
       clear = FALSE
     )
     pb$tick(0)
@@ -338,7 +338,7 @@ summarize_subject_per_category <- function(
     #   verbose = FALSE, group_duration = group_duration
     # )
 
-    if (verbose) pb$tick(tokens = list(category = col))
+    if (verbose) pb$tick(tokens = list(category = col, key = key))
 
     list(
       category_column = col,
