@@ -1,4 +1,13 @@
 
+
+get_group_by_fn <- function(group_duration) {
+  switch(group_duration,
+    "week" = identity,
+    "four_weeks" = group_by_fn_(4),
+    "quarter" = group_by_fn_(13),
+    "year" = group_by_fn_(52)
+  )
+}
 # @param dt time varying dataset
 # @param var_types list of column variable types by column name
 # @param group_duration string of "week", "four_weeks", "quarter" or "year"
@@ -9,12 +18,8 @@ summarize_time_varying <- function(dt, var_types, group_duration, verbose) {
       (floor( (ageweeks - 1) / n) + 1) * n
     }
   }
-  group_by_fn <- switch(group_duration,
-    "week" = identity,
-    "four_weeks" = group_by_fn_(4),
-    "quarter" = group_by_fn_(13),
-    "year" = group_by_fn_(52)
-  )
+
+  group_by_fn <- get_group_by_fn(group_duration)
 
 
   # make sure the variables in question are everything but the time indicators
