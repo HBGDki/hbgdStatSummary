@@ -1,8 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-man-roxygen
+^man-roxygen
 \.git
 \.DS_Store
 .lintr
-general_structure.txt
+^general_structure
 ^js
+^_ignore
