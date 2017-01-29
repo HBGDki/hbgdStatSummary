@@ -3,11 +3,14 @@
 \name{to_json}
 \alias{to_file}
 \alias{to_json}
+\alias{to_multiple_files}
 \title{Save methods}
 \usage{
 to_json(x, pretty = FALSE)
 
 to_file(x, file, pretty = FALSE)
+
+to_multiple_files(x, data_name, pretty = FALSE)
 }
 \arguments{
 \item{x}{item in question}
@@ -15,6 +18,8 @@ to_file(x, file, pretty = FALSE)
 \item{pretty}{boolean to pretty print the json}
 
 \item{file}{file to print the json}
+
+\item{data_name}{name of dataset}
 }
 \description{
 Save methods
