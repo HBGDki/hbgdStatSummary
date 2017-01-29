@@ -1,0 +1,24 @@
+General structure:
+{
+
+  SAME AS GENERAL STRUCTURE UNLESS AS NOTED
+
+  (if time varying numeric)
+  COLUMN_NAME: {
+    ...,
+    "subject-level-cat": {
+      "SUBJECT_LEVEL_CAT_COLUMN_NAME": {
+        "KEY": {
+          # information performed on subsetted data where this 'key' in 'subject_level_column' exists in the data
+          "time_bins": TIME_VARYING_NUM_TIME_BINS_FORMAT_OF_COLUMN_NAME
+        },
+        ...,
+        (if any NA KEYs exist)
+        "..na..": {
+          # information performed on subsetted data where 'subject_level_column' is NA in the data
+          "time_bins": TIME_VARYING_NUM_TIME_BINS_FORMAT_OF_COLUMN_NAME
+        }
+      }
+    }
+  }
+}
