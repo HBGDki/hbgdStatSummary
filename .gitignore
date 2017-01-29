@@ -34,3 +34,5 @@ vignettes/*.pdf
 
 .DS_Store
 .lintr_cache
+
+_ignore
