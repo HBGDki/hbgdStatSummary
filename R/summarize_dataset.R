@@ -172,6 +172,19 @@ to_file <- function(x, file, pretty = FALSE) {
   readr::write_file("\n", path = file, append = TRUE)
   x
 }
+#' @rdname to_json
+#' @param data_name name of dataset
+#' @export
+to_multiple_files <- function(x, data_name, pretty = FALSE) {
+
+  dir.create(data_name, recursive = TRUE, showWarnings = FALSE)
+
+  for (name in names(x)) {
+    to_file(x[[name]], file = file.path(data_name, paste(name, ".json", sep = "")), pretty = pretty)
+  }
+
+  invisible(x)
+}
 
 
 
