@@ -116,6 +116,17 @@ summarize_dataset <- function(
   original_order
   ret <- ret[original_order]
 
+  # var_info <- data_frame(
+  #   name = c(colnames(sdd), colnames(tdd)),
+  #   kind = rep(c("subject", "time"), c(length(colnames(sdd)), length(colnames(tdd))))
+  # ) %>%
+  #   mutate(
+  #     type = unlist(data_var_types[name])
+  #   ) ->
+  # attr(ret, "var_info")
+  attr(ret, "dt") <- dt
+  attr(ret, "hbgd") <- attr(dt, "hbgd")
+
   ret
 }
 
