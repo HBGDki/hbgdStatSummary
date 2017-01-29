@@ -225,6 +225,7 @@ summarize_dataset_with_time_varying_subsets <- function(
   group_by_fn <- get_group_by_fn(group_duration)
 
   for (col in time_var_num_cols) {
+    # init
     ret[[col]]$"subject-level-cat" <- list()
   }
 
@@ -258,6 +259,7 @@ summarize_dataset_with_time_varying_subsets <- function(
 
     # for each key in subject cat column
     lapply(column_keys, function(column_key) {
+      # subset the data once per subj-cat column/key combo
       if (column_key == "..na..") {
         subset_dt <- upgraded_dt[dt_col_is_na, ]
       } else {
@@ -266,12 +268,15 @@ summarize_dataset_with_time_varying_subsets <- function(
 
       # for each time-varying-num column
       lapply(time_var_num_cols, function(time_var_num_col) {
+        # init
         if (is.null(ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]])) {
           ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]] <<- list()
         }
 
+        # get the time summaries with the subsetted data
         time_var_num_sum <- summarize_time_varying_num(subset_dt, time_var_num_col, group_by_fn = group_by_fn, group_duration = group_duration)
 
+        # store time bins in c("time col", "subject-level-cat", "SUBJ CAT COL", "KEY")
         ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]][[column_key]] <<- list(time_bins = time_var_num_sum$time_bins)
 
         NULL
