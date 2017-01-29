@@ -1,6 +1,12 @@
 
 
 get_group_by_fn <- function(group_duration) {
+  group_by_fn_ <- function(n) {
+    function(ageweeks) {
+      (floor( (ageweeks - 1) / n) + 1) * n
+    }
+  }
+
   switch(group_duration,
     "week" = identity,
     "four_weeks" = group_by_fn_(4),
@@ -12,12 +18,6 @@ get_group_by_fn <- function(group_duration) {
 # @param var_types list of column variable types by column name
 # @param group_duration string of "week", "four_weeks", "quarter" or "year"
 summarize_time_varying <- function(dt, var_types, group_duration, verbose) {
-
-  group_by_fn_ <- function(n) {
-    function(ageweeks) {
-      (floor( (ageweeks - 1) / n) + 1) * n
-    }
-  }
 
   group_by_fn <- get_group_by_fn(group_duration)
 
