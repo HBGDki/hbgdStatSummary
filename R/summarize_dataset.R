@@ -174,13 +174,25 @@ to_file <- function(x, file, pretty = FALSE) {
 }
 #' @rdname to_json
 #' @param data_name name of dataset
+#' @param verbose boolean to determine if a progress bar is displayed
 #' @export
-to_multiple_files <- function(x, data_name, pretty = FALSE) {
+to_multiple_files <- function(x, data_name, pretty = FALSE, verbose = TRUE) {
 
   dir.create(data_name, recursive = TRUE, showWarnings = FALSE)
 
+  if (verbose) {
+    cat("Saving outputs to folder: ", data_name, "\n")
+    pb <- progress_bar$new(
+      total = length(names),
+      format = "  [:bar] :percent eta::eta",
+      clear = FALSE
+    )
+    pb$tick(0)
+  }
+
   for (name in names(x)) {
     to_file(x[[name]], file = file.path(data_name, paste(name, ".json", sep = "")), pretty = pretty)
+    if (verbose) pb$tick()
   }
 
   invisible(x)
