@@ -183,7 +183,7 @@ to_multiple_files <- function(x, data_name, pretty = FALSE, verbose = TRUE) {
   if (verbose) {
     cat("Saving outputs to folder: ", data_name, "\n")
     pb <- progress_bar$new(
-      total = length(names),
+      total = length(names(x)),
       format = "  [:bar] :percent eta::eta",
       clear = FALSE
     )
