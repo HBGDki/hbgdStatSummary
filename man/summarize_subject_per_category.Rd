@@ -23,4 +23,3 @@ summarize_subject_per_category(dt, check = TRUE, group_duration = "week",
 Summarise subject level info per cateogry
 '
 }
-

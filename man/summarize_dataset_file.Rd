@@ -16,4 +16,3 @@ summarize_dataset_file(..., file, pretty)
 \description{
 Create a full object that summarizes both subject level and time varying variables, then saves the json results to a file
 }
-

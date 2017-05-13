@@ -28,4 +28,3 @@ summarize_dataset_json(..., pretty = TRUE)
 \description{
 Create a full object that summarizes both subject level and time varying variables.
 }
-

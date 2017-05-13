@@ -7,7 +7,7 @@
 \usage{
 summarize_dataset_with_time_varying_subsets(dt, check = TRUE,
   group_duration = "week", verbose = TRUE, agedays_min = -365,
-  agedays_max = 365 * 2)
+  agedays_max = 365 * 2, parallel_cores = 1)
 }
 \arguments{
 \item{dt}{dataset to summarizes}
@@ -24,4 +24,3 @@ summarize_dataset_with_time_varying_subsets(dt, check = TRUE,
 Summarise subject level info per cateogry
 '
 }
-
