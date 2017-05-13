@@ -332,7 +332,16 @@ summarize_dataset_with_time_varying_subsets <- function(
   )
 
   # store the answer in proper place
+  if (verbose) {
+    pb <- progress_bar$new(
+      total = length(par_ans),
+      format = "combine results [:bar] :percent eta::eta :current/:total :spin",
+      clear = FALSE
+    )
+    pb$tick(0)
+  }
   for (ans_i in par_ans) {
+    if (verbose) pb$tick()
     time_var_num_col <- ans_i$time_var_num_col
     column_key <- ans_i$column_key
     subj_cat_col <- ans_i$subj_cat_col
