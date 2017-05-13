@@ -8,9 +8,8 @@
 summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, verbose = TRUE, ...) {
   if (verbose) {
     pb <- progress_bar$new(
-      show_after = 0,
       total = length(vars),
-      format = "  [:bar] :percent eta::eta :current/:total :spin",
+      format = "summarise [:bar] :percent eta::eta :current/:total :spin",
       clear = FALSE
     )
   }
@@ -184,13 +183,12 @@ to_multiple_files <- function(x, data_name, pretty = FALSE, verbose = TRUE, para
   if (verbose) {
     cat("Saving outputs to folder: ", data_name, "\n")
     len <- length(names(x))
-    format <- "  [:bar] :percent eta::eta :current/:total :spin"
+    format <- "save [:bar] :percent eta::eta :current/:total :spin"
     if (parallel_cores > 1) {
       len <- len / parallel_cores
       format <- paste(format, "\n", sep = "")
     }
     pb <- progress_bar$new(
-      show_after = 0,
       total = len,
       format = format,
       clear = FALSE
@@ -289,9 +287,8 @@ summarize_dataset_with_time_varying_subsets <- function(
 
     cat("Per Subject Category, Time Varying summaries\n")
     pb <- progress_bar$new(
-      show_after = 0,
       total = total_count,
-      format = "  [:bar] :percent eta::eta :current/:total :spin",
+      format = "summarise/subj cat [:bar] :percent eta::eta :current/:total :spin",
       clear = FALSE
     )
     pb$tick(0)
@@ -516,9 +513,8 @@ summarize_subject_per_category <- function(
     cat("Subject level summaries per category\n")
     pb <- progress_bar$new(
       total = nrow(col_key_combos),
-      format = "  [:bar] :percent eta::eta (:category/:key) :spin",
-      clear = FALSE,
-      show_after = 0
+      format = "summarise / cat [:bar] :percent eta::eta (:category/:key) :spin",
+      clear = FALSE
     )
     pb$tick(0)
   }
