@@ -183,7 +183,7 @@ to_multiple_files <- function(x, data_name, pretty = FALSE, verbose = TRUE, para
   if (verbose) {
     cat("Saving outputs to folder: ", data_name, "\n")
     len <- length(names(x))
-    format <- "save [:bar] :percent eta::eta :current/:total :spin"
+    format <- "save ':col' [:bar] :percent eta::eta :current/:total :spin"
     if (parallel_cores > 1) {
       len <- len / parallel_cores
       format <- paste(format, "\n", sep = "")
@@ -191,6 +191,7 @@ to_multiple_files <- function(x, data_name, pretty = FALSE, verbose = TRUE, para
     pb <- progress_bar$new(
       total = len,
       format = format,
+      show_after = 0,
       clear = FALSE
     )
     pb$tick(0)
@@ -198,8 +199,8 @@ to_multiple_files <- function(x, data_name, pretty = FALSE, verbose = TRUE, para
 
   # for (name in names(x)) {
   plyr::llply(names(x), function(name) {
+    if (verbose) pb$tick(tokens = list(col = name))
     to_file(x[[name]], file = file.path(data_name, paste(name, ".json", sep = "")), pretty = pretty)
-    if (verbose) pb$tick()
     NULL
   }, .parallel = parallel_cores > 1)
   # }
@@ -265,19 +266,20 @@ summarize_dataset_with_time_varying_subsets <- function(
   }
 
 
-  if (verbose) {
-    cols_and_keys <- plyr::ldply(subj_cat_cols, function(subj_cat_col) {
-      data_frame(
-        subj_cat_col = subj_cat_col,
-        column_key = ret[[subj_cat_col]]$counts$key
-      )
-    })
+  cols_and_keys <- plyr::ldply(subj_cat_cols, function(subj_cat_col) {
+    data_frame(
+      subj_cat_col = subj_cat_col,
+      column_key = ret[[subj_cat_col]]$counts$key
+    )
+  })
 
-    cols_and_keys <- plyr::ldply(time_var_num_cols, function(time_var_num_col) {
-      ans <- cols_and_keys
-      ans$time_var_num_col <- time_var_num_col
-      ans
-    })
+  cols_and_keys <- plyr::ldply(time_var_num_cols, function(time_var_num_col) {
+    ans <- cols_and_keys
+    ans$time_var_num_col <- time_var_num_col
+    ans
+  })
+
+  if (verbose) {
 
     total_count <- nrow(cols_and_keys)
 
@@ -398,6 +400,146 @@ summarize_dataset_with_time_varying_subsets <- function(
 
 }
 
+
+
+
+
+
+
+
+
+
+#' Summarise subject level info per cateogry
+#' '
+#' @param dt dataset to summarizes
+#' @param check boolean to determine if \code{check_data()} should be performed
+#' @param group_duration string of one of \code{c("week", "month", "quarter", "year")}
+#' @param verbose boolean to determine if progress bars should be displayed
+#' @param agedays_min,agedays_max min and max agedays allowed
+#' @importFrom magrittr equals not
+#' @export
+summarize_dataset_with_time_varying_subsets_two <- function(
+  dt,
+  check = TRUE,
+  group_duration = "week",
+  verbose = TRUE,
+  agedays_min = -365,
+  agedays_max = 365*2,
+  parallel_cores = 1
+) {
+
+  ret <- summarize_dataset(dt, check = check, group_duration = group_duration, verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max)
+
+  lapply(ret, function(x) {
+    data_frame(id = x$id, type = x$type)
+  }) %>%
+    dplyr::bind_rows() ->
+  variable_types
+
+  subj_cat_cols <- variable_types %>% filter(type == "subject-level-cat") %>% extract2("id")
+  time_var_num_cols <- variable_types %>% filter(type == "time-varying-num") %>% extract2("id")
+
+  upgraded_dt <- attr(ret, "dt")
+
+  group_by_fn <- get_group_by_fn(group_duration)
+
+  if (verbose) {
+    cat("Per Subject Category, Time Varying summaries\n")
+    time_pb <- progress_bar$new(
+      total = length(time_var_num_cols),
+      format = "time columns: ':time_col' [:bar] :current/:total eta::eta\n",
+      show_after = 0,
+      clear = FALSE
+    )
+
+  }
+  for (time_var_num_col in time_var_num_cols) {
+    # init
+    ret[[time_var_num_col]]$"subject-level-cat" <- list()
+
+    cols_and_keys <- plyr::ldply(subj_cat_cols, function(subj_cat_col) {
+      # init
+      if (is.null(ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]])) {
+        ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]] <<- list()
+      }
+
+      data_frame(
+        subj_cat_col = subj_cat_col,
+        column_key = ret[[subj_cat_col]]$counts$key
+      )
+    })
+
+    if (verbose) {
+      time_pb$tick(tokens = list(time_col = time_var_num_col))
+      total_count <- nrow(cols_and_keys)
+      if (parallel_cores > 1) {
+        total_count <- total_count / parallel_cores
+      }
+      pb <- progress_bar$new(
+        total = total_count,
+        format = "':time_col' summarise [:bar] :percent eta::eta :current/:total :spin",
+        clear = FALSE
+      )
+      pb$tick(0)
+    }
+
+    par_ans <- plyr::llply(
+      seq_len(nrow(cols_and_keys)),
+      .parallel = parallel_cores > 1,
+      function(i) {
+        subj_cat_col <- cols_and_keys$subj_cat_col[i]
+        column_key <- cols_and_keys$column_key[i]
+
+        dt_col <- upgraded_dt[[subj_cat_col]]
+
+        dt_col_is_na <- is.na(dt_col)
+
+        # subset the data once per subj-cat column/key combo
+        if (column_key == "..na..") {
+          subset_dt <- upgraded_dt[dt_col_is_na, ]
+        } else {
+          subset_dt <- upgraded_dt[(dt_col == column_key) & !dt_col_is_na, ]
+        }
+
+        # get the time summaries with the subsetted data
+        time_var_num_sum <- summarize_time_varying_num(subset_dt, time_var_num_col, group_by_fn = group_by_fn, group_duration = group_duration)
+
+        if (verbose) pb$tick(tokens = list(time_col = time_var_num_col))
+
+        list(
+          time_bins = time_var_num_sum$time_bins,
+          subj_cat_col = subj_cat_col,
+          column_key = column_key
+        )
+      }
+    )
+
+    # store the answer in proper place
+    if (verbose) {
+      pb <- progress_bar$new(
+        total = length(par_ans),
+        format = "combine results [:bar] :percent eta::eta :current/:total :spin",
+        clear = FALSE
+      )
+    }
+    for (ans_i in par_ans) {
+      if (verbose) pb$tick()
+      column_key <- ans_i$column_key
+      subj_cat_col <- ans_i$subj_cat_col
+      time_bins <- ans_i$time_bins
+
+      # store time bins in c("time col", "subject-level-cat", "SUBJ CAT COL", "KEY")
+      ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]][[column_key]] <- list(time_bins = time_bins)
+    }
+
+  }
+
+
+
+
+  ret
+
+}
 
 
 
