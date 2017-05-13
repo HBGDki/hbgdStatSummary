@@ -117,9 +117,8 @@ summarize_dataset <- function(
 
 
   # order results to be the same as the incoming data
-  colnames(dt) %>%
-    subset(. %in% names(ret)) ->
-  original_order
+  dt_cols <- colnames(dt)
+  original_order <- dt_cols[dt_cols %in% names(ret)]
   ret <- ret[original_order]
 
   # var_info <- data_frame(
