@@ -320,6 +320,8 @@ summarize_dataset_with_time_varying_subsets <- function(
       # get the time summaries with the subsetted data
       time_var_num_sum <- summarize_time_varying_num(subset_dt, time_var_num_col, group_by_fn = group_by_fn, group_duration = group_duration)
 
+      if (verbose) pb$tick()
+
       list(
         time_bins = time_var_num_sum$time_bins,
         subj_cat_col = subj_cat_col,
