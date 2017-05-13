@@ -8,6 +8,7 @@
 summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, verbose = TRUE, ...) {
   if (verbose) {
     pb <- progress_bar$new(
+      show_after = 0,
       total = length(vars),
       format = "  [:bar] :percent eta::eta :current/:total :spin",
       clear = FALSE
@@ -176,7 +177,7 @@ to_file <- function(x, file, pretty = FALSE) {
 #' @param data_name name of dataset
 #' @param verbose boolean to determine if a progress bar is displayed
 #' @export
-to_multiple_files <- function(x, data_name, pretty = FALSE, verbose = TRUE, parallel = FALSE) {
+to_multiple_files <- function(x, data_name, pretty = FALSE, verbose = TRUE, parallel_cores = 1) {
 
   dir.create(data_name, recursive = TRUE, showWarnings = FALSE)
 
@@ -184,11 +185,12 @@ to_multiple_files <- function(x, data_name, pretty = FALSE, verbose = TRUE, para
     cat("Saving outputs to folder: ", data_name, "\n")
     len <- length(names(x))
     format <- "  [:bar] :percent eta::eta :current/:total :spin"
-    if (parallel) {
-      len <- len / foreach:::.foreachGlobals$data
+    if (parallel_cores > 1) {
+      len <- len / parallel_cores
       format <- paste(format, "\n", sep = "")
     }
     pb <- progress_bar$new(
+      show_after = 0,
       total = len,
       format = format,
       clear = FALSE
@@ -201,7 +203,7 @@ to_multiple_files <- function(x, data_name, pretty = FALSE, verbose = TRUE, para
     to_file(x[[name]], file = file.path(data_name, paste(name, ".json", sep = "")), pretty = pretty)
     if (verbose) pb$tick()
     NULL
-  }, .parallel = parallel)
+  }, .parallel = parallel_cores > 1)
   # }
 
   invisible(x)
@@ -241,7 +243,7 @@ summarize_dataset_with_time_varying_subsets <- function(
   verbose = TRUE,
   agedays_min = -365,
   agedays_max = 365*2,
-  parallel = FALSE
+  parallel_cores = 1
 ) {
 
   ret <- summarize_dataset(dt, check = check, group_duration = group_duration, verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max)
@@ -266,14 +268,14 @@ summarize_dataset_with_time_varying_subsets <- function(
 
 
   if (verbose) {
-    cols_and_keys <- ldply(subj_cat_cols, function(subj_cat_col) {
+    cols_and_keys <- plyr::ldply(subj_cat_cols, function(subj_cat_col) {
       data_frame(
-        subj_cat_col = subj_cat_cols,
+        subj_cat_col = subj_cat_col,
         column_key = ret[[subj_cat_col]]$counts$key
       )
     })
 
-    cols_and_keys <- ldply(time_var_num_cols, function(time_var_num_col) {
+    cols_and_keys <- plyr::ldply(time_var_num_cols, function(time_var_num_col) {
       ans <- cols_and_keys
       ans$time_var_num_col <- time_var_num_col
       ans
@@ -281,12 +283,13 @@ summarize_dataset_with_time_varying_subsets <- function(
 
     total_count <- nrow(cols_and_keys)
 
-    if (parallel) {
-      total_count <- total_count / foreach::.foreachGlobals$data
+    if (parallel_cores > 1) {
+      total_count <- total_count / parallel_cores
     }
 
     cat("Per Subject Category, Time Varying summaries\n")
     pb <- progress_bar$new(
+      show_after = 0,
       total = total_count,
       format = "  [:bar] :percent eta::eta :current/:total :spin",
       clear = FALSE
@@ -297,7 +300,7 @@ summarize_dataset_with_time_varying_subsets <- function(
 
   par_ans <- plyr::llply(
     seq_len(nrow(cols_and_keys)),
-    .parallel = parallel,
+    .parallel = parallel_cores > 1,
     function(i) {
       subj_cat_col <- cols_and_keys$subj_cat_col[i]
       column_key <- cols_and_keys$column_key[i]
