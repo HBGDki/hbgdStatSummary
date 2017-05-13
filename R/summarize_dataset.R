@@ -267,7 +267,6 @@ summarize_dataset_with_time_varying_subsets <- function(
     ret[[col]]$"subject-level-cat" <- list()
   }
 
-
   cols_and_keys <- plyr::ldply(subj_cat_cols, function(subj_cat_col) {
     data_frame(
       subj_cat_col = subj_cat_col,
