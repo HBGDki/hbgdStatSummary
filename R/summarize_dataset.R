@@ -478,7 +478,7 @@ summarize_dataset_with_time_varying_subsets_two <- function(
       pb <- progress_bar$new(
         total = total_count,
         format = "':time_col' summarise [:bar] :percent eta::eta :current/:total :spin",
-        clear = FALSE
+        clear = TRUE
       )
       pb$tick(0)
     }
