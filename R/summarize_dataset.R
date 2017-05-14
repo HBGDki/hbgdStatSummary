@@ -137,7 +137,6 @@ summarize_dataset <- function(
 
   if (ncol(tdd) > 1) {
     if (verbose) cat("Time varying summaries\n")
-    browser()
     time <- summarize_time_varying(tdd, data_var_types, group_duration, verbose)
     ret <- append(ret, time[sort(names(time))])
   }
