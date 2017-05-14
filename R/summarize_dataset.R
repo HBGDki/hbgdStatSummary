@@ -67,19 +67,21 @@ summarize_dataset <- function(
 
   original_age_days_range <- range(dt$agedays, na.rm = TRUE)
 
-  # make sure they are under two years old
-  dt <- dt[!is.na(dt$agedays), ]
-  dt <- dt[
-    dt[["agedays"]] <= agedays_max &  # remove old time
-    dt[["agedays"]] >= agedays_min,  # remove 'pre-birth' time
-  ]
+  if (!identical(dt$agedays, NULL)) {
+    # make sure they are under two years old
+    dt <- dt[!is.na(dt$agedays), ]
+    dt <- dt[
+      dt[["agedays"]] <= agedays_max &  # remove old time
+      dt[["agedays"]] >= agedays_min,  # remove 'pre-birth' time
+    ]
 
-  if (nrow(dt) == 0) {
-    stop("No data within the agedays of ", agedays_min, ":", agedays_max, ". Supplied range is ", original_age_days_range[1], ":", original_age_days_range[2])
+    if (nrow(dt) == 0) {
+      stop("No data within the agedays of ", agedays_min, ":", agedays_max, ". Supplied range is ", original_age_days_range[1], ":", original_age_days_range[2])
+    }
+
+    # find out which week the record was taken
+    dt$ageweeks <- floor(dt$agedays / 7)
   }
-
-  # find out which week the record was taken
-  dt$ageweeks <- floor(dt$agedays / 7)
 
 
   # remove all NA columns
