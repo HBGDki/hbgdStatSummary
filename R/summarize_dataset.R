@@ -72,6 +72,10 @@ summarize_dataset <- function(
     dt[["agedays"]] >= agedays_min,  # remove 'pre-birth' time
   ]
 
+  if (nrow(dt) == 0) {
+    stop("No data within the agedays of ", agedays_min, ":", agedays_max)
+  }
+
   # find out which week the record was taken
   dt$ageweeks <- floor(dt$agedays / 7)
 
