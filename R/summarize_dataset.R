@@ -65,6 +65,8 @@ summarize_dataset <- function(
   # get days sep by 1 week for up to 2 years
   # time_breaks <- seq(from = 1, by = 7, length.out = 2 * 52 + 1)
 
+  original_age_days_range <- range(dt$agedays, na.rm = TRUE)
+
   # make sure they are under two years old
   dt <- dt[!is.na(dt$agedays), ]
   dt <- dt[
@@ -73,7 +75,7 @@ summarize_dataset <- function(
   ]
 
   if (nrow(dt) == 0) {
-    stop("No data within the agedays of ", agedays_min, ":", agedays_max)
+    stop("No data within the agedays of ", agedays_min, ":", agedays_max, ". Supplied range is ", original_age_days_range[1], ":", original_age_days_range[2])
   }
 
   # find out which week the record was taken
