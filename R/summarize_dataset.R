@@ -552,6 +552,7 @@ summarize_dataset_with_time_varying_subsets_two <- function(
         pb <- progress_bar$new(
           total = length(par_ans),
           format = "combine results [:bar] :percent eta::eta :current/:total :spin",
+          show_after = 0,
           clear = FALSE
         )
       }
@@ -560,7 +561,7 @@ summarize_dataset_with_time_varying_subsets_two <- function(
         column_key <- ans_i$column_key
         subj_cat_col <- ans_i$subj_cat_col
         time_bins <- ans_i$time_bins
-
+browser()
         # store time bins in c("time col", "subject-level-cat", "SUBJ CAT COL", "KEY")
         ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]][[column_key]] <- list(time_bins = time_bins)
       }
