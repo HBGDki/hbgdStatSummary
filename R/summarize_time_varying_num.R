@@ -26,8 +26,6 @@ summarize_time_varying_num <- function(
   group_duration
 ) {
 
-  print(col_name)
-
   # calc the age group and nest the data accordingly
   dt %>%
     select_("ageweeks", col_name) %>%
