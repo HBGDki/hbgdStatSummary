@@ -109,7 +109,16 @@ summarize_dataset <- function(
 
   if (is.null(attr(dt, "hbgd"))) {
     dt <- get_data_attributes(dt)
+    var_summ <- attr(dt, "hbgd")$var_summ
+    ageweeks_row <- which(var_summ$variable == "ageweeks")
+    if (var_summ$type[ageweeks_row] == "subject-level") {
+      var_summ$type[ageweeks_row] <- "time-varying"
+      attr(dt, "hbgd")$var_summ <- var_summ
+      attr(dt, "hbgd")$timevarying_vars <- c(attr(dt, "hbgd")$timevarying_vars, "ageweeks")
+      attr(dt, "hbgd")$subjectlevel_vars <- setdiff(attr(dt, "hbgd")$subjectlevel_vars, "ageweeks")
+    }
   }
+
   data_var_types <- vtype_list(dt)
 
   tdd <- get_time_data(dt)
