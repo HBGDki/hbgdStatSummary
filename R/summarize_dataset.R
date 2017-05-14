@@ -62,28 +62,6 @@ summarize_dataset <- function(
     check_data(dt)
   }
 
-  # get days sep by 1 week for up to 2 years
-  # time_breaks <- seq(from = 1, by = 7, length.out = 2 * 52 + 1)
-
-  original_age_days_range <- range(dt$agedays, na.rm = TRUE)
-
-  if (!identical(dt$agedays, NULL)) {
-    # make sure they are under two years old
-    dt <- dt[!is.na(dt$agedays), ]
-    dt <- dt[
-      dt[["agedays"]] <= agedays_max &  # remove old time
-      dt[["agedays"]] >= agedays_min,  # remove 'pre-birth' time
-    ]
-
-    if (nrow(dt) == 0) {
-      stop("No data within the agedays of ", agedays_min, ":", agedays_max, ". Supplied range is ", original_age_days_range[1], ":", original_age_days_range[2])
-    }
-
-    # find out which week the record was taken
-    dt$ageweeks <- floor(dt$agedays / 7)
-  }
-
-
   # remove all NA columns
   is_na_cols <- sapply(dt, function(col) {
     all(is.na(col))
@@ -94,6 +72,40 @@ summarize_dataset <- function(
     cat("  ", paste(names(dt)[is_na_cols], collapse = ", "), "\n", sep = "")
     dt <- dt[!is_na_cols]
   }
+
+
+  # get days sep by 1 week for up to 2 years
+  # time_breaks <- seq(from = 1, by = 7, length.out = 2 * 52 + 1)
+
+
+  if (identical(dt$agedays, NULL)) {
+    data_var_types <- lapply(dt, function(x_col) {
+      if (is.character(x_col) || is.factor(x_col)) {
+        "cat"
+      } else {
+        "num"
+      }
+    })
+    names(data_var_types) <- colnames(dt)
+    ret <- summarize_subject_level(dt, data_var_types, verbose)
+    attr(ret, "dt") <- dt
+    return(ret)
+  }
+
+  original_age_days_range <- range(dt$agedays, na.rm = TRUE)
+  # make sure they are under two years old
+  dt <- dt[!is.na(dt$agedays), ]
+  dt <- dt[
+    dt[["agedays"]] <= agedays_max &  # remove old time
+    dt[["agedays"]] >= agedays_min,  # remove 'pre-birth' time
+  ]
+
+  if (nrow(dt) == 0) {
+    stop("No data within the agedays of ", agedays_min, ":", agedays_max, ". Supplied range is ", original_age_days_range[1], ":", original_age_days_range[2])
+  }
+
+  # find out which week the record was taken
+  dt$ageweeks <- floor(dt$agedays / 7)
 
   if (is.null(attr(dt, "hbgd"))) {
     dt <- get_data_attributes(dt)
