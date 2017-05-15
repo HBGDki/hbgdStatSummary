@@ -774,8 +774,7 @@ summarize_dataset_with_time_varying_subsets_four <- function(
       pb <- progress_bar$new(
         total = total_count,
         format = ":subj_i/:subj_len ':subj_col' :key_current/:key_total [:bar] :percent :elapsed:-:eta :current/:total :spin",
-        clear = FALSE,
-        show_after = 0
+        clear = FALSE
       )
     }
 
