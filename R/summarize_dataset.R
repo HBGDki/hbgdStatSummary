@@ -135,8 +135,8 @@ summarize_dataset <- function(
   if (verbose) cat("Subject level summaries\n")
   ret <- summarize_subject_level(sdd, data_var_types, verbose)
 
-  if (ncol(tdd) > 1) {
-    browser()
+  # there there are columns more than agedays and ageweeks
+  if (ncol(tdd) > 2) {
     if (verbose) cat("Time varying summaries\n")
     time <- summarize_time_varying(tdd, data_var_types, group_duration, verbose)
     ret <- append(ret, time[sort(names(time))])
