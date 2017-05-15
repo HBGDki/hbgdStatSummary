@@ -767,6 +767,10 @@ summarize_dataset_with_time_varying_subsets_four <- function(
       }) %>% sum()
       total_count <- total_count * length(time_var_num_cols)
 
+      if (parallel_cores > 1) {
+        total_count <- total_count / parallel_cores
+      }
+
       pb <- progress_bar$new(
         total = total_count,
         format = ":subj_i/:subj_len ':subj_col' :key_current/:key_total [:bar] :percent :elapsed:-:eta :current/:total :spin",
