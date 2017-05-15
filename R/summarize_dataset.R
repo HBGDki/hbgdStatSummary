@@ -10,6 +10,7 @@ summarize_with_fn_type <- function(dt, vars, var_types, fn_num, fn_cat, verbose 
     pb <- progress_bar$new(
       total = length(vars),
       format = "summarise [:bar] :percent eta::eta :current/:total :spin",
+      show_after = 0,
       clear = FALSE
     )
   }
