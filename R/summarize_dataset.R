@@ -62,21 +62,8 @@ summarize_dataset <- function(
     check_data(dt)
   }
 
-  # remove all NA columns
-  is_na_cols <- sapply(dt, function(col) {
-    all(is.na(col))
-  })
-  if (sum(is_na_cols) > 0) {
-    # always print, as it's changing the data
-    cat("Removing ", sum(is_na_cols), " NA columns from data:\n", sep = "")
-    cat("  ", paste(names(dt)[is_na_cols], collapse = ", "), "\n", sep = "")
-    dt <- dt[!is_na_cols]
-  }
-
-
   # get days sep by 1 week for up to 2 years
   # time_breaks <- seq(from = 1, by = 7, length.out = 2 * 52 + 1)
-
 
   if (identical(dt$agedays, NULL)) {
     data_var_types <- lapply(dt, function(x_col) {
@@ -103,6 +90,18 @@ summarize_dataset <- function(
   if (nrow(dt) == 0) {
     stop("No data within the agedays of ", agedays_min, ":", agedays_max, ". Supplied range is ", original_age_days_range[1], ":", original_age_days_range[2])
   }
+
+  # remove all NA columns (after subsetting dates)
+  is_na_cols <- sapply(dt, function(col) {
+    all(is.na(col))
+  })
+  if (sum(is_na_cols) > 0) {
+    # always print, as it's changing the data
+    cat("Removing ", sum(is_na_cols), " NA columns from data:\n", sep = "")
+    cat("  ", paste(names(dt)[is_na_cols], collapse = ", "), "\n", sep = "")
+    dt <- dt[!is_na_cols]
+  }
+
 
   # find out which week the record was taken
   dt$ageweeks <- floor(dt$agedays / 7)
@@ -486,6 +485,7 @@ summarize_dataset_with_time_varying_subsets_two <- function(
       )
 
     }
+
     for (time_var_num_col in time_var_num_cols) {
       # init
       ret[[time_var_num_col]]$"subject-level-cat" <- list()
@@ -573,6 +573,123 @@ summarize_dataset_with_time_varying_subsets_two <- function(
 
 
 
+
+
+
+
+
+#' Summarise subject level info per cateogry
+#' '
+#' @param dt dataset to summarizes
+#' @param check boolean to determine if \code{check_data()} should be performed
+#' @param group_duration string of one of \code{c("week", "month", "quarter", "year")}
+#' @param verbose boolean to determine if progress bars should be displayed
+#' @param agedays_min,agedays_max min and max agedays allowed
+#' @importFrom magrittr equals not
+#' @export
+summarize_dataset_with_time_varying_subsets_three <- function(
+  dt,
+  check = TRUE,
+  group_duration = "week",
+  verbose = TRUE,
+  agedays_min = -365,
+  agedays_max = 365*2,
+  parallel_cores = 1
+) {
+
+  ret <- summarize_dataset(dt, check = check, group_duration = group_duration, verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max)
+
+  lapply(ret, function(x) {
+    data_frame(id = x$id, type = x$type)
+  }) %>%
+    dplyr::bind_rows() ->
+  variable_types
+
+  subj_cat_cols <- variable_types %>% filter(type == "subject-level-cat") %>% extract2("id")
+  time_var_num_cols <- variable_types %>% filter(type == "time-varying-num") %>% extract2("id")
+
+  upgraded_dt <- attr(ret, "dt")
+
+  group_by_fn <- get_group_by_fn(group_duration)
+
+  if (length(time_var_num_cols) > 0) {
+
+    # init
+    for (time_var_num_col in time_var_num_cols) {
+      ret[[time_var_num_col]]$"subject-level-cat" <- list()
+      for (subj_cat_col in subj_cat_cols) {
+        if (is.null(ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]])) {
+          ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]] <- list()
+        }
+      }
+    }
+
+    if (verbose) {
+      cat("Per Subject Category, Time Varying summaries\n")
+
+      total_count <- plyr::laply(subj_cat_cols, function(subj_cat_col) {
+        length(ret[[subj_cat_col]]$counts$key)
+      }) %>% sum()
+
+      pb <- progress_bar$new(
+        total = total_count,
+        format = "':subj_col' :key_current/:key_total [:bar] :percent eta::eta :current/:total :spin",
+        clear = TRUE,
+        show_after = 0
+      )
+    }
+
+    for (subj_cat_col in subj_cat_cols) {
+
+      dt_col <- upgraded_dt[[subj_cat_col]]
+
+      dt_col_is_na <- is.na(dt_col)
+
+      column_keys <- ret[[subj_cat_col]]$counts$key
+      column_keys_length <- length(column_keys)
+
+      # for (column_key in column_keys) {
+      for (i in seq_len(column_keys_length)) {
+        column_key <- column_keys[i]
+
+        # subset the data once per subj-cat column/key combo
+        if (column_key == "..na..") {
+          subset_dt <- upgraded_dt[dt_col_is_na, ]
+        } else {
+          subset_dt <- upgraded_dt[(dt_col == column_key) & !dt_col_is_na, ]
+        }
+
+        if (verbose) {
+          pb$tick(tokens = list(subj_col = subj_cat_col, key_current = i, key_total = column_keys_length))
+        }
+
+        par_ans <- plyr::llply(
+          time_var_num_cols,
+          .parallel = parallel_cores > 1,
+          function(time_var_num_col) {
+
+            # get the time summaries with the subsetted data
+            time_var_num_sum <- summarize_time_varying_num(subset_dt, time_var_num_col, group_by_fn = group_by_fn, group_duration = group_duration)
+
+            list(
+              time_bins = time_var_num_sum$time_bins,
+              time_var_num_col = time_var_num_col
+            )
+          }
+        )
+
+        for (ans_i in par_ans) {
+          time_var_num_col <- ans_i$time_var_num_col
+          time_bins <- ans_i$time_bins
+          # store time bins in c("time col", "subject-level-cat", "SUBJ CAT COL", "KEY")
+          ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]][[column_key]] <- list(time_bins = time_bins)
+        }
+      }
+    }
+  }
+
+  ret
+}
 
 
 
