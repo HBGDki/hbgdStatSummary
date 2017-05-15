@@ -705,6 +705,144 @@ summarize_dataset_with_time_varying_subsets_three <- function(
 
 
 
+
+
+
+
+
+
+
+
+#' Summarise subject level info per cateogry
+#' '
+#' @param dt dataset to summarizes
+#' @param check boolean to determine if \code{check_data()} should be performed
+#' @param group_duration string of one of \code{c("week", "month", "quarter", "year")}
+#' @param verbose boolean to determine if progress bars should be displayed
+#' @param agedays_min,agedays_max min and max agedays allowed
+#' @importFrom magrittr equals not
+#' @export
+summarize_dataset_with_time_varying_subsets_four <- function(
+  dt,
+  check = TRUE,
+  group_duration = "week",
+  verbose = TRUE,
+  agedays_min = -365,
+  agedays_max = 365*2,
+  parallel_cores = 1
+) {
+
+  ret <- summarize_dataset(dt, check = check, group_duration = group_duration, verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max)
+
+  lapply(ret, function(x) {
+    data_frame(id = x$id, type = x$type)
+  }) %>%
+    dplyr::bind_rows() ->
+  variable_types
+
+  subj_cat_cols <- variable_types %>% filter(type == "subject-level-cat") %>% extract2("id")
+  time_var_num_cols <- variable_types %>% filter(type == "time-varying-num") %>% extract2("id")
+
+  upgraded_dt <- attr(ret, "dt")
+
+  group_by_fn <- get_group_by_fn(group_duration)
+
+  if (length(time_var_num_cols) > 0) {
+
+    # init
+    for (time_var_num_col in time_var_num_cols) {
+      ret[[time_var_num_col]]$"subject-level-cat" <- list()
+      for (subj_cat_col in subj_cat_cols) {
+        if (is.null(ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]])) {
+          ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]] <- list()
+        }
+      }
+    }
+
+    if (verbose) {
+      cat("Per Subject Category, Time Varying summaries\n")
+
+      total_count <- plyr::laply(subj_cat_cols, function(subj_cat_col) {
+        length(ret[[subj_cat_col]]$counts$key)
+      }) %>% sum()
+      total_count <- total_count * length(time_var_num_cols)
+
+      pb <- progress_bar$new(
+        total = total_count,
+        format = ":subj_i/:subj_len ':subj_col' :key_current/:key_total [:bar] :percent :elapsed:-:eta :current/:total :spin",
+        clear = FALSE,
+        show_after = 0
+      )
+    }
+
+    subj_cat_cols_length <- length(subj_cat_cols)
+
+    time_var_ans <- plyr::llply(
+      time_var_num_cols,
+      .parallel = parallel_cores > 1,
+      function(time_var_num_col) {
+
+        subj_ans <- lapply(seq_len(subj_cat_cols_length), function(subj_i) {
+          subj_cat_col <- subj_cat_cols[subj_i]
+
+          dt_col <- upgraded_dt[[subj_cat_col]]
+
+          dt_col_is_na <- is.na(dt_col)
+
+          column_keys <- ret[[subj_cat_col]]$counts$key
+          column_keys_length <- length(column_keys)
+
+          # for (column_key in column_keys) {
+          # for (i in seq_len(column_keys_length)) {
+          column_ans <- lapply(seq_len(column_keys_length), function(i) {
+            column_key <- column_keys[i]
+
+            # subset the data once per subj-cat column/key combo
+            if (column_key == "..na..") {
+              subset_dt <- upgraded_dt[dt_col_is_na, ]
+            } else {
+              subset_dt <- upgraded_dt[(dt_col == column_key) & !dt_col_is_na, ]
+            }
+
+            if (verbose) {
+              pb$tick(tokens = list(
+                subj_col = subj_cat_col,
+                key_current = i, key_total = column_keys_length,
+                subj_i = subj_i, subj_len = subj_cat_cols_length
+              ))
+            }
+
+            # get the time summaries with the subsetted data
+            time_var_num_sum <- summarize_time_varying_num(subset_dt, time_var_num_col, group_by_fn = group_by_fn, group_duration = group_duration)
+
+            list(
+              time_bins = time_var_num_sum$time_bins
+            )
+          })
+          names(column_ans) <- column_keys
+          column_ans
+        })
+
+        names(subj_ans) <- subj_cat_cols
+        subj_ans
+      }
+    )
+
+
+    for (time_i in seq_along(time_var_num_cols)) {
+      time_var_num_col <- time_var_num_cols[time_i]
+      ret[[time_var_num_col]][["subject-level-cat"]] <- time_var_ans[[time_i]]
+    }
+  }
+
+  ret
+}
+
+
+
+
+
+
 #' Summarise subject level info per cateogry
 #' '
 #' @param dt dataset to summarizes
