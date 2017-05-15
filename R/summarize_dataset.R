@@ -635,13 +635,16 @@ summarize_dataset_with_time_varying_subsets_three <- function(
 
       pb <- progress_bar$new(
         total = total_count,
-        format = "':subj_col' :key_current/:key_total [:bar] :percent :elapsed:-:eta :current/:total :spin",
+        format = ":subj_i/:subj_len ':subj_col' :key_current/:key_total [:bar] :percent :elapsed:-:eta :current/:total :spin",
         clear = FALSE,
         show_after = 0
       )
     }
 
-    for (subj_cat_col in subj_cat_cols) {
+    subj_cat_cols_length <- length(subj_cat_cols)
+
+    for (subj_i in seq_len(subj_cat_cols_length)) {
+      subj_cat_col <- subj_cat_cols[subj_i]
 
       dt_col <- upgraded_dt[[subj_cat_col]]
 
@@ -662,7 +665,11 @@ summarize_dataset_with_time_varying_subsets_three <- function(
         }
 
         if (verbose) {
-          pb$tick(tokens = list(subj_col = subj_cat_col, key_current = i, key_total = column_keys_length))
+          pb$tick(tokens = list(
+            subj_col = subj_cat_col,
+            key_current = i, key_total = column_keys_length,
+            subj_i = subj_i, subj_len = subj_cat_cols_length
+          ))
         }
 
         par_ans <- plyr::llply(
