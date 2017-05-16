@@ -857,6 +857,9 @@ summarize_dataset_with_time_varying_subsets_and_save_four <- function(
           file = save_name,
           pretty = pretty
         )
+        if (verbose) {
+          cat("saving column: ", time_var_num_col, " - DONE\n")
+        }
 
         # return nothing
         time_i
@@ -868,6 +871,9 @@ summarize_dataset_with_time_varying_subsets_and_save_four <- function(
   other_cols <- names(ret)
   other_cols <- other_cols[!(other_cols %in% time_var_num_cols)]
 
+  if (verbose) {
+    cat("\nsaving smaller files\n")
+  }
   lapply(other_cols, function(other_col) {
     save_name <- file.path(data_name, paste(other_col, ".json", sep = ""))
     if (file.exists(save_name)) {
@@ -884,6 +890,9 @@ summarize_dataset_with_time_varying_subsets_and_save_four <- function(
       file = save_name,
       pretty = pretty
     )
+    if (verbose) {
+      cat("saving column: ", other_col, " - DONE\n")
+    }
     NULL
   })
 
