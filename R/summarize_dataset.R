@@ -801,6 +801,8 @@ summarize_dataset_with_time_varying_subsets_and_save_four <- function(
 
             if (column_keys_length > 10000) {
               cat("returning early for column: ", subj_cat_col, ". It has more keys (", column_keys_length, ") than the alloted 10k\n")
+              # increment the number of cols to update the timer
+              pb$tick(column_keys_length)
               return(NULL)
             }
 
