@@ -722,15 +722,19 @@ summarize_dataset_with_time_varying_subsets_three <- function(
 #' @param agedays_min,agedays_max min and max agedays allowed
 #' @importFrom magrittr equals not
 #' @export
-summarize_dataset_with_time_varying_subsets_four <- function(
+summarize_dataset_with_time_varying_subsets_and_save_four <- function(
   dt,
+  data_name,
   check = TRUE,
   group_duration = "week",
   verbose = TRUE,
   agedays_min = -365,
   agedays_max = 365*2,
+  pretty = FALSE,
   parallel_cores = 1
 ) {
+
+  dir.create(data_name, showWarnings = FALSE)
 
   ret <- summarize_dataset(dt, check = check, group_duration = group_duration, verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max)
 
@@ -749,96 +753,141 @@ summarize_dataset_with_time_varying_subsets_four <- function(
 
   if (length(time_var_num_cols) > 0) {
 
-    # init
-    for (time_var_num_col in time_var_num_cols) {
-      ret[[time_var_num_col]]$"subject-level-cat" <- list()
-      for (subj_cat_col in subj_cat_cols) {
-        if (is.null(ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]])) {
-          ret[[time_var_num_col]][["subject-level-cat"]][[subj_cat_col]] <- list()
-        }
-      }
-    }
-
     if (verbose) {
       cat("Per Subject Category, Time Varying summaries\n")
-
-      total_count <- plyr::laply(subj_cat_cols, function(subj_cat_col) {
-        length(ret[[subj_cat_col]]$counts$key)
-      }) %>% sum()
-      total_count <- total_count * length(time_var_num_cols)
-
-      if (parallel_cores > 1) {
-        total_count <- total_count / parallel_cores
-      }
-
-      pb <- progress_bar$new(
-        total = total_count,
-        format = ":subj_i/:subj_len ':subj_col' :key_current/:key_total [:bar] :percent :elapsed:-:eta :current/:total :spin",
-        clear = FALSE
-      )
     }
 
+    time_var_num_cols_length <- length(time_var_num_cols)
     subj_cat_cols_length <- length(subj_cat_cols)
 
-    time_var_ans <- plyr::llply(
-      time_var_num_cols,
+    ignore <- plyr::llply(
+      seq_len(time_var_num_cols_length),
       .parallel = parallel_cores > 1,
-      function(time_var_num_col) {
+      function(time_i) {
 
-        subj_ans <- lapply(seq_len(subj_cat_cols_length), function(subj_i) {
-          subj_cat_col <- subj_cat_cols[subj_i]
+        time_var_num_col <- time_var_num_cols[time_i]
 
-          dt_col <- upgraded_dt[[subj_cat_col]]
+        save_name <- file.path(data_name, paste(time_var_num_col, ".json", sep = ""))
+        if (file.exists(save_name)) {
+          if (verbose) {
+            cat("returning early. Output already found for ", save_name, "\n")
+          }
+          return(NULL)
+        }
 
-          dt_col_is_na <- is.na(dt_col)
+        if (verbose) {
+          total_count <- plyr::laply(subj_cat_cols, function(subj_cat_col) {
+            length(ret[[subj_cat_col]]$counts$key)
+          }) %>% sum()
 
-          column_keys <- ret[[subj_cat_col]]$counts$key
-          column_keys_length <- length(column_keys)
+          pb <- progress_bar$new(
+            total = total_count,
+            format = ":time_i/:time_len :subj_i/:subj_len:':subj_col' :key_current/:key_total [:bar] :percent :elapsed:-:eta :spin",
+            clear = FALSE
+          )
+        }
 
-          # for (column_key in column_keys) {
-          # for (i in seq_len(column_keys_length)) {
-          column_ans <- lapply(seq_len(column_keys_length), function(i) {
-            column_key <- column_keys[i]
+        lapply(
+          seq_len(subj_cat_cols_length),
+          function(subj_i) {
+            subj_cat_col <- subj_cat_cols[subj_i]
 
-            # subset the data once per subj-cat column/key combo
-            if (column_key == "..na..") {
-              subset_dt <- upgraded_dt[dt_col_is_na, ]
-            } else {
-              subset_dt <- upgraded_dt[(dt_col == column_key) & !dt_col_is_na, ]
+            dt_col <- upgraded_dt[[subj_cat_col]]
+
+            dt_col_is_na <- is.na(dt_col)
+
+            column_keys <- ret[[subj_cat_col]]$counts$key
+            column_keys_length <- length(column_keys)
+
+            if (column_keys_length > 10000) {
+              cat("returning early for column: ", subj_cat_col, ". It has more keys (", column_keys_length, ") than the alloted 10k\n")
+              return(NULL)
             }
 
-            if (verbose) {
-              pb$tick(tokens = list(
-                subj_col = subj_cat_col,
-                key_current = i, key_total = column_keys_length,
-                subj_i = subj_i, subj_len = subj_cat_cols_length
-              ))
-            }
+            # for (column_key in column_keys) {
+            # for (i in seq_len(column_keys_length)) {
+            lapply(
+              seq_len(column_keys_length),
+              function(i) {
+                column_key <- column_keys[i]
 
-            # get the time summaries with the subsetted data
-            time_var_num_sum <- summarize_time_varying_num(subset_dt, time_var_num_col, group_by_fn = group_by_fn, group_duration = group_duration)
+                # subset the data once per subj-cat column/key combo
+                if (column_key == "..na..") {
+                  subset_dt <- upgraded_dt[dt_col_is_na, ]
+                } else {
+                  subset_dt <- upgraded_dt[(dt_col == column_key) & !dt_col_is_na, ]
+                }
 
-            list(
-              time_bins = time_var_num_sum$time_bins
-            )
-          })
-          names(column_ans) <- column_keys
-          column_ans
-        })
+                if (verbose) {
+                  pb$tick(tokens = list(
+                    time_i = time_i, time_len = time_var_num_cols_length,
+                    subj_col = subj_cat_col,
+                    key_current = i, key_total = column_keys_length,
+                    subj_i = subj_i, subj_len = subj_cat_cols_length
+                  ))
+                }
+
+                # get the time summaries with the subsetted data
+                time_var_num_sum <- summarize_time_varying_num(subset_dt, time_var_num_col, group_by_fn = group_by_fn, group_duration = group_duration)
+
+                list(
+                  time_bins = time_var_num_sum$time_bins
+                )
+              }
+            ) ->
+            column_ans
+
+            names(column_ans) <- column_keys
+            column_ans
+          }
+        ) ->
+        subj_ans
 
         names(subj_ans) <- subj_cat_cols
         subj_ans
+
+        time_info <- ret[[time_var_num_col]]
+        time_info[["subject-level-cat"]] <- subj_ans
+
+        if (verbose) {
+          cat("saving column: ", time_var_num_col, "\n")
+        }
+        to_file(
+          time_info,
+          file = save_name,
+          pretty = pretty
+        )
+
+        # return nothing
+        time_i
       }
     )
 
-
-    for (time_i in seq_along(time_var_num_cols)) {
-      time_var_num_col <- time_var_num_cols[time_i]
-      ret[[time_var_num_col]][["subject-level-cat"]] <- time_var_ans[[time_i]]
-    }
   }
 
-  ret
+  other_cols <- names(ret)
+  other_cols <- other_cols[!(other_cols %in% time_var_num_cols)]
+
+  lapply(other_cols, function(other_col) {
+    save_name <- file.path(data_name, paste(other_col, ".json", sep = ""))
+    if (file.exists(save_name)) {
+      if (verbose) {
+        cat("returning early. Output already found for ", save_name, "\n")
+      }
+      return(NULL)
+    }
+    if (verbose) {
+      cat("saving column: ", other_col, "\n")
+    }
+    to_file(
+      ret[[other_col]],
+      file = save_name,
+      pretty = pretty
+    )
+    NULL
+  })
+
+  TRUE
 }
 
 
