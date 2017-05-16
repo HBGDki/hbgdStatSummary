@@ -734,7 +734,7 @@ summarize_dataset_with_time_varying_subsets_and_save_four <- function(
   parallel_cores = 1
 ) {
 
-  dir.create(data_name, showWarnings = FALSE)
+  dir.create(data_name, showWarnings = FALSE, recursive = TRUE)
 
   ret <- summarize_dataset(dt, check = check, group_duration = group_duration, verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max)
 
