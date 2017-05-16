@@ -804,6 +804,11 @@ summarize_dataset_with_time_varying_subsets_and_save_four <- function(
               # increment the number of cols to update the timer
               pb$tick(column_keys_length)
               return(NULL)
+            } else if (subj_cat_col == "subjido") {
+              cat("returning early for column: 'subjido'. No sub summaries allowed\n")
+              # increment the number of cols to update the timer
+              pb$tick(column_keys_length)
+              return(NULL)
             }
 
             # for (column_key in column_keys) {
