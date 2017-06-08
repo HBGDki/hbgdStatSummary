@@ -64,7 +64,16 @@ count_info <- function(dt, col_name, keys) {
 
 vtype_list <- function(dt) {
   var_summ <- attr(dt, "hbgd")$var_summ
-  ret <- as.list(var_summ$vtype)
-  names(ret) <- var_summ$variable
+  # ret <- as.list(var_summ$vtype)
+  # names(ret) <- var_summ$variable
+
+  ret <- lapply(dt[var_summ$variable], function(var) {
+    if (is.numeric(var)) {
+      "num"
+    } else {
+      "cat"
+    }
+  })
+
   ret
 }
