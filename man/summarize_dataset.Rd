@@ -6,7 +6,7 @@
 \title{Summarize full dataset}
 \usage{
 summarize_dataset(dt, check = TRUE, group_duration = "week",
-  verbose = TRUE, agedays_min = -365, agedays_max = 265 * 2)
+  verbose = TRUE, agedays_min = -365, agedays_max = 365 * 2)
 
 summarize_dataset_json(..., pretty = TRUE)
 }

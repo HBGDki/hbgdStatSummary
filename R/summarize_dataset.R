@@ -54,7 +54,7 @@ summarize_dataset <- function(
   group_duration = "week",
   verbose = TRUE,
   agedays_min = -365,
-  agedays_max = 265*2
+  agedays_max = 365 * 2
 ) {
 
   colnames(dt) <- tolower(colnames(dt))
