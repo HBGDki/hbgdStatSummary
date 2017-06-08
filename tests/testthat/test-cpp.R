@@ -28,6 +28,5 @@ test_that("data json matches valid data json", {
   cp <- read_csv("cp_data.csv", trim_ws = FALSE)
 
   test_json <- summarize_dataset_json(cp, check = FALSE)
-
   expect_output_file(cat(test_json), "cp_summary_valid.json")
 })

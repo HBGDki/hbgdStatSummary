@@ -89,7 +89,7 @@ summarize_dataset <- function(
   ]
 
   if (nrow(dt) == 0) {
-    stop("No data within the agedays of ", agedays_min, ":", agedays_max, ". Supplied range is ", original_age_days_range[1], ":", original_age_days_range[2])
+    stop("No data within the agedays of ", agedays_min, ":", agedays_max, ". Supplied range is ", original_age_days_range[1], ":", original_age_days_range[2]) # nolint
   }
 
   # remove all NA columns (after subsetting dates)
@@ -231,11 +231,15 @@ to_multiple_files <- function(x, data_name, pretty = FALSE, verbose = TRUE, para
   }
 
   # for (name in names(x)) {
-  plyr::llply(names(x), function(name) {
-    if (verbose) pb$tick(tokens = list(col = name))
-    to_file(x[[name]], file = file.path(data_name, paste(name, ".json", sep = "")), pretty = pretty)
-    NULL
-  }, .parallel = parallel_cores > 1)
+  plyr::llply(
+    names(x),
+    function(name) {
+      if (verbose) pb$tick(tokens = list(col = name))
+      to_file(x[[name]], file = file.path(data_name, paste(name, ".json", sep = "")), pretty = pretty)
+      NULL
+    },
+    .parallel = parallel_cores > 1
+  )
   # }
 
   invisible(x)
@@ -274,11 +278,14 @@ summarize_dataset_with_time_varying_subsets <- function(
   group_duration = "week",
   verbose = TRUE,
   agedays_min = -365,
-  agedays_max = 365*2,
+  agedays_max = 365 * 2,
   parallel_cores = 1
 ) {
 
-  ret <- summarize_dataset(dt, check = check, group_duration = group_duration, verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max)
+  ret <- summarize_dataset(
+    dt, check = check, group_duration = group_duration,
+    verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max
+  )
 
   lapply(ret, function(x) {
     data_frame(id = x$id, type = x$type)
@@ -456,11 +463,14 @@ summarize_dataset_with_time_varying_subsets_two <- function(
   group_duration = "week",
   verbose = TRUE,
   agedays_min = -365,
-  agedays_max = 365*2,
+  agedays_max = 365 * 2,
   parallel_cores = 1
 ) {
 
-  ret <- summarize_dataset(dt, check = check, group_duration = group_duration, verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max)
+  ret <- summarize_dataset(
+    dt, check = check, group_duration = group_duration,
+    verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max
+  )
 
   lapply(ret, function(x) {
     data_frame(id = x$id, type = x$type)
@@ -595,11 +605,14 @@ summarize_dataset_with_time_varying_subsets_three <- function(
   group_duration = "week",
   verbose = TRUE,
   agedays_min = -365,
-  agedays_max = 365*2,
+  agedays_max = 365 * 2,
   parallel_cores = 1
 ) {
 
-  ret <- summarize_dataset(dt, check = check, group_duration = group_duration, verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max)
+  ret <- summarize_dataset(
+    dt, check = check, group_duration = group_duration,
+    verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max
+  )
 
   lapply(ret, function(x) {
     data_frame(id = x$id, type = x$type)
@@ -631,7 +644,8 @@ summarize_dataset_with_time_varying_subsets_three <- function(
 
       total_count <- plyr::laply(subj_cat_cols, function(subj_cat_col) {
         length(ret[[subj_cat_col]]$counts$key)
-      }) %>% sum()
+      }) %>%
+        sum()
 
       pb <- progress_bar$new(
         total = total_count,
@@ -729,14 +743,17 @@ summarize_dataset_with_time_varying_subsets_and_save_four <- function(
   group_duration = "week",
   verbose = TRUE,
   agedays_min = -365,
-  agedays_max = 365*2,
+  agedays_max = 365 * 2,
   pretty = FALSE,
   parallel_cores = 1
 ) {
 
   dir.create(data_name, showWarnings = FALSE, recursive = TRUE)
 
-  ret <- summarize_dataset(dt, check = check, group_duration = group_duration, verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max)
+  ret <- summarize_dataset(
+    dt, check = check, group_duration = group_duration,
+    verbose = verbose, agedays_min = agedays_min, agedays_max = agedays_max
+  )
 
   lapply(ret, function(x) {
     data_frame(id = x$id, type = x$type)
@@ -778,7 +795,8 @@ summarize_dataset_with_time_varying_subsets_and_save_four <- function(
         if (verbose) {
           total_count <- plyr::laply(subj_cat_cols, function(subj_cat_col) {
             length(ret[[subj_cat_col]]$counts$key)
-          }) %>% sum()
+          }) %>%
+            sum()
 
           pb <- progress_bar$new(
             total = total_count,
@@ -926,7 +944,7 @@ summarize_subject_per_category <- function(
   group_duration = "week",
   verbose = TRUE,
   agedays_min = -365,
-  agedays_max = 365*2
+  agedays_max = 365 * 2
 ) {
 
   colnames(dt) <- tolower(colnames(dt))
@@ -980,7 +998,7 @@ summarize_subject_per_category <- function(
     which() %>%
     names() ->
   numeric_subject_columns
-  num_distro <- sdd[colnames(sdd) %in% numeric_subject_columns]
+  # num_distro <- sdd[colnames(sdd) %in% numeric_subject_columns]
 
   # get category columns
   sapply(distributions, `[[`, "type") %>%
@@ -1031,7 +1049,7 @@ summarize_subject_per_category <- function(
 
   ret <- lapply(seq_len(nrow(col_key_combos)), function(combo_pos) {
 
-    row <- col_key_combos[combo_pos, ]
+    # row <- col_key_combos[combo_pos, ]
     col <- col_key_combos$col[[combo_pos]]
     key <- col_key_combos$key[[combo_pos]]
     is_key <- col_key_combos$is_key[[combo_pos]]
