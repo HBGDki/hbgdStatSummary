@@ -68,10 +68,10 @@ summarize_dataset <- function(
 
   if (identical(dt$agedays, NULL)) {
     data_var_types <- lapply(dt, function(x_col) {
-      if (is.character(x_col) || is.factor(x_col)) {
-        "cat"
-      } else {
+      if (is.numeric(x_col)) {
         "num"
+      } else {
+        "cat"
       }
     })
     names(data_var_types) <- colnames(dt)
